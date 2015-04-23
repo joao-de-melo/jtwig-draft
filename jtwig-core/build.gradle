@@ -1,0 +1,48 @@
+apply plugin: 'jacoco';
+
+test {
+    jacoco {
+        excludes = ["org.jtwig.parser.parboiled.*"]
+    }
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: 'org/jtwig/parser/**')
+        })
+    }
+}
+
+sourceSets {
+    // Note that just declaring this sourceset creates two configurations.
+    intTest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    intTestCompile.extendsFrom testCompile
+    intTestRuntime.extendsFrom testRuntime
+}
+
+task intTest(type:Test){
+    description = "Run integration tests (located in src/intTest/...)."
+    testClassesDir = project.sourceSets.intTest.output.classesDir
+    classpath = project.sourceSets.intTest.runtimeClasspath
+}
+dependencies {
+    compile 'com.google.guava:guava'
+    compile 'org.apache.commons:commons-lang3'
+    compile 'org.parboiled:parboiled-java'
+    compile 'org.slf4j:slf4j-api'
+    compile 'com.lyncode:reflection-invoke'
+
+    testCompile 'commons-io:commons-io'
+    testCompile 'org.hamcrest:hamcrest-all'
+    testCompile 'org.mockito:mockito-all'
+    testCompile 'junit:junit'
+
+    intTestCompile 'junit:junit:4.11'
+}

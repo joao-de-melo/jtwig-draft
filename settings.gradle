@@ -1,0 +1,4 @@
+rootProject.name = 'jtwig-v2'
+
+include 'jtwig-core'
+
