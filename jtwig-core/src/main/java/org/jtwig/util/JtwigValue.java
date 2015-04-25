@@ -85,6 +85,7 @@ public class JtwigValue implements Comparable<JtwigValue> {
         if (isNull()) return new HashMap<>();
         else if (value instanceof Map) return (Map<Object, Object>) value;
         else if (value instanceof Iterable) return mapFromIterable((Iterable) value);
+        else if (value.getClass().isArray()) return mapFromIterable(asList((Object[])value));
         else return new HashMap<Object, Object>() {{ put(0, value); }};
     }
 

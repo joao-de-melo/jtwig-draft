@@ -22,10 +22,12 @@ public class OutputNodeParser extends NodeParser<OutputNode> {
         return Sequence(
                 positionTrackerParser.PushPosition(),
 
-                limitsParser.startOutput(), spacingParser.Spacing(),
-                anyExpressionParser.ExpressionRule(), spacingParser.Spacing(),
+                limitsParser.startOutput(),
+                spacingParser.Spacing(),
+                Mandatory(anyExpressionParser.ExpressionRule(), "Missing output expression"),
+                spacingParser.Spacing(),
 
-                limitsParser.endOutput(),
+                Mandatory(limitsParser.endOutput(), "Expecting end of output code island"),
 
                 push(new OutputNode(
                         positionTrackerParser.pop(1),

@@ -83,6 +83,16 @@ public class JtwigValueTest {
         assertThat(result.get(0), is((Object) "one"));
     }
 
+
+    @Test
+    public void asMapWhenArray() throws Exception {
+        underTest = new JtwigValue(new Integer[]{1,2});
+        Map<Object, Object> result = underTest.asMap();
+
+        assertThat(result.get(0), is((Object) 1));
+        assertThat(result.get(1), is((Object) 2));
+    }
+
     @Test
     public void asMapWhenMap() throws Exception {
         underTest = new JtwigValue(new HashMap<Object, Object>() {{ put("a", "b"); }});

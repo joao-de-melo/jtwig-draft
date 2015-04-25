@@ -4,6 +4,7 @@ import org.jtwig.model.expression.ConstantExpression;
 import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.parboiled.base.LexicParser;
 import org.jtwig.parser.parboiled.base.PositionTrackerParser;
+import org.jtwig.parser.parboiled.model.Keyword;
 import org.parboiled.Rule;
 
 import java.math.BigDecimal;
@@ -16,6 +17,8 @@ public class ConstantExpressionParser extends ExpressionParser<ConstantExpressio
     @Override
     public Rule ExpressionRule() {
         return FirstOf(
+                TrueRule(),
+                FalseRule(),
                 NumberRule(),
                 StringRule()
         );
@@ -31,11 +34,33 @@ public class ConstantExpressionParser extends ExpressionParser<ConstantExpressio
     }
 
     public Rule StringRule() {
+        PositionTrackerParser positionTrackerParser = parserContext().parser(PositionTrackerParser.class);
+        LexicParser lexicParser = parserContext().parser(LexicParser.class);
         return Sequence(
-                parserContext().parser(PositionTrackerParser.class).PushPosition(),
-                parserContext().parser(LexicParser.class).String(),
-                swap(),
-                push(new ConstantExpression(parserContext().parser(PositionTrackerParser.class).pop(), parserContext().parser(LexicParser.class).pop()))
+            positionTrackerParser.PushPosition(),
+            lexicParser.String(),
+            swap(),
+            push(new ConstantExpression(positionTrackerParser.pop(), lexicParser.pop()))
+        );
+    }
+
+    public Rule TrueRule () {
+        PositionTrackerParser positionTrackerParser = parserContext().parser(PositionTrackerParser.class);
+        LexicParser lexicParser = parserContext().parser(LexicParser.class);
+        return Sequence(
+            positionTrackerParser.PushPosition(),
+            lexicParser.Keyword(Keyword.TRUE),
+            push(new ConstantExpression(positionTrackerParser.pop(), true))
+        );
+    }
+
+    public Rule FalseRule () {
+        PositionTrackerParser positionTrackerParser = parserContext().parser(PositionTrackerParser.class);
+        LexicParser lexicParser = parserContext().parser(LexicParser.class);
+        return Sequence(
+            positionTrackerParser.PushPosition(),
+            lexicParser.Keyword(Keyword.FALSE),
+            push(new ConstantExpression(positionTrackerParser.pop(), false))
         );
     }
 }

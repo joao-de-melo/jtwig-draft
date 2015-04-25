@@ -9,7 +9,7 @@ import java.util.Map;
 public class JtwigModel {
     private final Map<String, JtwigValue> values;
 
-    public static JtwigModel emptyModel() {
+    public static JtwigModel newModel() {
         return new JtwigModel(new HashMap<String, JtwigValue>());
     }
 

@@ -12,6 +12,7 @@ import org.jtwig.parser.parboiled.model.Keyword;
 import org.parboiled.Rule;
 
 public class ForLoopNodeParser extends NodeParser<ForLoopNode> {
+
     public ForLoopNodeParser(ParserContext context) {
         super(ForLoopNodeParser.class, context);
     }
@@ -26,45 +27,45 @@ public class ForLoopNodeParser extends NodeParser<ForLoopNode> {
         AnyExpressionParser anyExpressionParser = parserContext().parser(AnyExpressionParser.class);
         CompositeNodeParser compositeNodeParser = parserContext().parser(CompositeNodeParser.class);
         return Sequence(
-                positionTrackerParser.PushPosition(),
+            positionTrackerParser.PushPosition(),
 
-                // Start
-                Sequence(
-                        limitsParser.startCode(), spacingParser.Spacing(),
-                        lexicParser.Keyword(Keyword.FOR), spacingParser.Spacing(),
-                        variableExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                        FirstOf(
-                                Sequence(
-                                        String(","), spacingParser.Spacing(),
-                                        variableExpressionParser.ExpressionRule(),
-                                        spacingParser.Spacing()
-                                ),
-                                variableExpressionParser.push(null)
-                        ),
-                        String("in"), spacingParser.Spacing(),
-                        anyExpressionParser.ExpressionRule(),
-                        spacingParser.Spacing(),
-
-                        limitsParser.endCode()
+            // Start
+            Sequence(
+                limitsParser.startCode(), spacingParser.Spacing(),
+                lexicParser.Keyword(Keyword.FOR), spacingParser.Spacing(),
+                Mandatory(variableExpressionParser.ExpressionRule(), "Expecting a variable name in for loop. Example: {% for value in list %}"),
+                spacingParser.Spacing(),
+                FirstOf(
+                    Sequence(
+                        String(","), spacingParser.Spacing(),
+                        Mandatory(variableExpressionParser.ExpressionRule(), "Expecting a second variable name in for loop. Example: {% for key, value in list %}"),
+                        spacingParser.Spacing()
+                    ),
+                    variableExpressionParser.push(null)
                 ),
+                Mandatory(lexicParser.Keyword(Keyword.IN), "Malformed for loop, missing 'in' keyword. For example: {% for i in list %}"), spacingParser.Spacing(),
+                Mandatory(anyExpressionParser.ExpressionRule(), "Expecting an expression in for loop"),
+                spacingParser.Spacing(),
 
-                compositeNodeParser.NodeRule(),
+                Mandatory(limitsParser.endCode(), "Malformed for loop start syntax, missing code island ending symbol")
+            ),
 
-                // End
-                Sequence(
-                        limitsParser.startCode(), spacingParser.Spacing(),
-                        lexicParser.Keyword(Keyword.END_FOR), spacingParser.Spacing(),
-                        limitsParser.endCode()
-                ),
+            compositeNodeParser.NodeRule(),
 
+            // End
+            Sequence(
+                limitsParser.startCode(), spacingParser.Spacing(),
+                lexicParser.Keyword(Keyword.END_FOR), spacingParser.Spacing(),
+                Mandatory(limitsParser.endCode(), "Malformed for loop end syntax, missing code island ending symbol")
+            ),
 
-                push(new ForLoopNode(
-                        positionTrackerParser.pop(4),
-                        variableExpressionParser.pop(3),
-                        variableExpressionParser.pop(2),
-                        variableExpressionParser.pop(1),
-                        compositeNodeParser.pop()
-                ))
+            push(new ForLoopNode(
+                positionTrackerParser.pop(4),
+                variableExpressionParser.pop(3),
+                variableExpressionParser.pop(2),
+                variableExpressionParser.pop(1),
+                compositeNodeParser.pop()
+            ))
         );
     }
 }

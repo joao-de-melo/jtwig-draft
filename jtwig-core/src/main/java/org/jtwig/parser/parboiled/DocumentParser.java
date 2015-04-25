@@ -9,16 +9,20 @@ import org.jtwig.parser.parboiled.node.NodeParser;
 import org.parboiled.Rule;
 
 public class DocumentParser extends NodeParser<Node> {
+
     public DocumentParser(ParserContext context) {
         super(DocumentParser.class, context);
     }
 
     @Override
     public Rule NodeRule() {
-        return FirstOf(
+        return Sequence(
+            FirstOf(
                 parserContext().parser(ExtendsNodeParser.class).NodeRule(),
                 parserContext().parser(CompositeNodeParser.class).NodeRule(),
                 push(new TextNode(parserContext().parser(PositionTrackerParser.class).currentPosition(), "", new TextNode.Configuration()))
+            ),
+            EOI
         );
     }
 }

@@ -32,6 +32,7 @@ task intTest(type:Test){
     testClassesDir = project.sourceSets.intTest.output.classesDir
     classpath = project.sourceSets.intTest.runtimeClasspath
 }
+
 dependencies {
     compile 'com.google.guava:guava'
     compile 'org.apache.commons:commons-lang3'

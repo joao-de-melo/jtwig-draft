@@ -1,8 +1,11 @@
 package org.jtwig.parser.parboiled.base;
 
+import org.jtwig.parser.ParseException;
 import org.jtwig.parser.parboiled.ParserContext;
+import org.jtwig.util.ErrorMessageFormatter;
 import org.parboiled.BaseParser;
 import org.parboiled.MatcherContext;
+import org.parboiled.Rule;
 import org.parboiled.errors.BasicParseError;
 import org.parboiled.support.ValueStack;
 
@@ -27,7 +30,16 @@ public class BasicParser<T> extends BaseParser<T> {
         parseErrors.add(new BasicParseError(matcherContext.getInputBuffer(), parseErrors.size(), message));
     }
 
+    public Rule Mandatory (Rule rule, String message) {
+        return FirstOf(
+            rule,
+            throwException(message)
+        );
+    }
 
+    public boolean throwException(String message) {
+        throw new ParseException(ErrorMessageFormatter.errorMessage(parserContext.parser(PositionTrackerParser.class).currentPosition(), message));
+    }
 
     // TODO: Remove
     @Deprecated

@@ -1,6 +1,7 @@
 package org.jtwig.parser.parboiled.model;
 
 public enum Keyword {
+    // MARKs
     INCLUDE("include"),
     SET("set"),
     BLOCK("block"),
@@ -16,7 +17,12 @@ public enum Keyword {
     END_MACRO("endmacro"),
     EXTENDS("extends"),
     EMBED("embed"),
-    END_EMBED("endembed")
+    END_EMBED("endembed"),
+    TRUE("true"),
+    FALSE("false"),
+
+    // Internal
+    IN("in")
     ;
 
     private final String symbol;

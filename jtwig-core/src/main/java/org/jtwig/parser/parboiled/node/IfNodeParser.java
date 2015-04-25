@@ -15,6 +15,7 @@ import java.util.Collection;
 import static org.parboiled.Parboiled.createParser;
 
 public class IfNodeParser extends NodeParser<IfNode> {
+
     public IfNodeParser(ParserContext context) {
         super(IfNodeParser.class, context);
         createParser(IfConditionNodeParser.class, context);
@@ -25,13 +26,14 @@ public class IfNodeParser extends NodeParser<IfNode> {
         PositionTrackerParser positionTrackerParser = parserContext().parser(PositionTrackerParser.class);
         IfConditionNodeParser conditionNodeParser = parserContext().parser(IfConditionNodeParser.class);
         return Sequence(
-                positionTrackerParser.PushPosition(),
-                conditionNodeParser.NodeRule(),
-                push(new IfNode(positionTrackerParser.pop(1), conditionNodeParser.pop()))
+            positionTrackerParser.PushPosition(),
+            conditionNodeParser.NodeRule(),
+            push(new IfNode(positionTrackerParser.pop(1), conditionNodeParser.pop()))
         );
     }
 
     public static class IfConditionNodeParser extends BasicParser<Collection<IfConditionNode>> {
+
         public IfConditionNodeParser(ParserContext context) {
             super(IfConditionNodeParser.class, context);
         }
@@ -44,41 +46,49 @@ public class IfNodeParser extends NodeParser<IfNode> {
             LexicParser lexicParser = parserContext().parser(LexicParser.class);
             CompositeNodeParser compositeNodeParser = parserContext().parser(CompositeNodeParser.class);
             return Sequence(
-                    push(new ArrayList<IfConditionNode>()),
+                push(new ArrayList<IfConditionNode>()),
 
-                    // Start
-                    Sequence(
-                            positionTrackerParser.PushPosition(),
+                // Start
+                Sequence(
+                    positionTrackerParser.PushPosition(),
+                    limitsParser.startCode(), spacingParser.Spacing(),
+                    lexicParser.Keyword(Keyword.IF)
+                ),
 
-                            limitsParser.startCode(), spacingParser.Spacing(),
-                            lexicParser.Keyword(Keyword.IF),
-                            spacingParser.Spacing(), String("("), spacingParser.Spacing(),
-                            anyExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                            String(")"), spacingParser.Spacing(), limitsParser.endCode()
-                    ),
+                ifConditionExpression(limitsParser, spacingParser, anyExpressionParser),
 
-                    // Content
-                    compositeNodeParser.NodeRule(),
-                    peek(3).add(new IfConditionNode(
-                            positionTrackerParser.pop(2),
-                            anyExpressionParser.pop(1),
-                            compositeNodeParser.pop()
-                    )),
+                // Content
+                compositeNodeParser.NodeRule(),
 
-                    ZeroOrMore(
-                            elseIfCondition()
-                    ),
+                peek(3).add(new IfConditionNode(
+                    positionTrackerParser.pop(2),
+                    anyExpressionParser.pop(1),
+                    compositeNodeParser.pop()
+                )),
 
-                    Optional(
-                            elseCondition()
-                    ),
+                ZeroOrMore(
+                    elseIfCondition()
+                ),
 
-                    // End
-                    Sequence(
-                            limitsParser.startCode(), spacingParser.Spacing(),
-                            lexicParser.Keyword(Keyword.END_IF), spacingParser.Spacing(),
-                            limitsParser.endCode()
-                    )
+                Optional(
+                    elseCondition()
+                ),
+
+                // End
+                Sequence(
+                    limitsParser.startCode(), spacingParser.Spacing(),
+                    lexicParser.Keyword(Keyword.END_IF), spacingParser.Spacing(),
+                    Mandatory(limitsParser.endCode(), "If condition endif code island not closed")
+                )
+            );
+        }
+
+        public Rule ifConditionExpression(LimitsParser limitsParser, SpacingParser spacingParser, AnyExpressionParser anyExpressionParser) {
+            return Sequence(
+                spacingParser.Spacing(), Mandatory(String("("), "If condition expression must start with parentheses"),
+                spacingParser.Spacing(), Mandatory(anyExpressionParser.ExpressionRule(), "Expecting an expression together with the if construction"),
+                spacingParser.Spacing(), Mandatory(String(")"), "If condition expression must end with parentheses"),
+                spacingParser.Spacing(), Mandatory(limitsParser.endCode(), "If condition code island not closed")
             );
         }
 
@@ -90,24 +100,23 @@ public class IfNodeParser extends NodeParser<IfNode> {
             LexicParser lexicParser = parserContext().parser(LexicParser.class);
             CompositeNodeParser compositeNodeParser = parserContext().parser(CompositeNodeParser.class);
             return Sequence(
-                    // Start
-                    Sequence(
-                            positionTrackerParser.PushPosition(),
+                // Start
+                Sequence(
+                    positionTrackerParser.PushPosition(),
 
-                            limitsParser.startCode(), spacingParser.Spacing(),
-                            lexicParser.Keyword(Keyword.ELSE_IF),
-                            spacingParser.Spacing(), String("("), spacingParser.Spacing(),
-                            anyExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                            String(")"), spacingParser.Spacing(), limitsParser.endCode()
-                    ),
+                    limitsParser.startCode(), spacingParser.Spacing(),
+                    lexicParser.Keyword(Keyword.ELSE_IF)
+                ),
 
-                    // Content
-                    compositeNodeParser.NodeRule(),
-                    peek(3).add(new IfConditionNode(
-                            positionTrackerParser.pop(2),
-                            anyExpressionParser.pop(1),
-                            compositeNodeParser.pop()
-                    ))
+                ifConditionExpression(limitsParser, spacingParser, anyExpressionParser),
+
+                // Content
+                compositeNodeParser.NodeRule(),
+                peek(3).add(new IfConditionNode(
+                    positionTrackerParser.pop(2),
+                    anyExpressionParser.pop(1),
+                    compositeNodeParser.pop()
+                ))
             );
         }
 
@@ -119,22 +128,21 @@ public class IfNodeParser extends NodeParser<IfNode> {
             LexicParser lexicParser = parserContext().parser(LexicParser.class);
             CompositeNodeParser compositeNodeParser = parserContext().parser(CompositeNodeParser.class);
             return Sequence(
-                    // Start
-                    Sequence(
-                            positionTrackerParser.PushPosition(),
+                // Start
+                Sequence(
+                    positionTrackerParser.PushPosition(),
+                    limitsParser.startCode(), spacingParser.Spacing(),
+                    lexicParser.Keyword(Keyword.ELSE),
+                    spacingParser.Spacing(),
+                    Mandatory(limitsParser.endCode(), "Expecting ending of else block")
+                ),
 
-                            limitsParser.startCode(), spacingParser.Spacing(),
-                            lexicParser.Keyword(Keyword.ELSE),
-                            spacingParser.Spacing(),
-                            limitsParser.endCode()
-                    ),
-
-                    compositeNodeParser.NodeRule(),
-                    peek(2).add(new IfConditionNode(
-                            positionTrackerParser.pop(1),
-                            new ConstantExpression(positionTrackerParser.currentPosition(), true),
-                            compositeNodeParser.pop()
-                    ))
+                compositeNodeParser.NodeRule(),
+                peek(2).add(new IfConditionNode(
+                    positionTrackerParser.pop(1),
+                    new ConstantExpression(positionTrackerParser.currentPosition(), true),
+                    compositeNodeParser.pop()
+                ))
             );
         }
 
