@@ -26,9 +26,10 @@ public class SetNodeParser extends NodeParser<SetNode> {
                 limitsParser.startCode(), spacingParser.Spacing(),
                 parserContext().parser(LexicParser.class).Keyword(Keyword.SET), spacingParser.Mandatory(),
                 variableExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                String("="), spacingParser.Spacing(),
+                Mandatory(String("="), "Expecting attribution operation '='"),
+                spacingParser.Spacing(),
                 anyExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                limitsParser.endCode(),
+                Mandatory(limitsParser.endCode(), "Expecting end of set code island"),
                 push(new SetNode(
                         positionTrackerParser.pop(2),
                         (VariableExpression) anyExpressionParser.pop(1),

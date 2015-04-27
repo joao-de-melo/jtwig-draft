@@ -24,6 +24,42 @@ public class IfConditionTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void ifConditionWhiteSpaceControlEndIf() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate("{% if (true) -%} ok{% else %}ko{% endif %}");
+
+        String result = jtwigTemplate.render(newModel());
+
+        assertThat(result, is("ok"));
+    }
+
+    @Test
+    public void ifConditionWhiteSpaceControlStartIf() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate(" {%- if (true) -%} ok{% else %}ko{% endif %}");
+
+        String result = jtwigTemplate.render(newModel());
+
+        assertThat(result, is("ok"));
+    }
+
+    @Test
+    public void ifConditionWhiteSpaceControlStartElse() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate(" {%- if (true) -%} ok {%- else %}ko{% endif %}");
+
+        String result = jtwigTemplate.render(newModel());
+
+        assertThat(result, is("ok"));
+    }
+
+    @Test
+    public void ifConditionWhiteSpaceControl() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate(" {%- if (false) -%} ko {%- else -%} ok {%- endif -%} ");
+
+        String result = jtwigTemplate.render(newModel());
+
+        assertThat(result, is("ok"));
+    }
+
+    @Test
     public void simpleIfSharedContext() throws Exception {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% set a = 2 %}{% if (true) %}{% set a = 1 %}{% endif %}{{ a }}");
 
