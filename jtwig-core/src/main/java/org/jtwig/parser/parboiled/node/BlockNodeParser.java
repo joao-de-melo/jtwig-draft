@@ -24,12 +24,14 @@ public class BlockNodeParser extends NodeParser<BlockNode> {
         return Sequence(
                 positionTrackerParser.PushPosition(),
                 limitsParser.startCode(), spacingParser.Spacing(),
-                lexicParser.Keyword(Keyword.BLOCK), spacingParser.Mandatory(),
-                variableExpressionParser.ExpressionRule(),
+                lexicParser.Keyword(Keyword.BLOCK),
+                spacingParser.Mandatory(),
+                Mandatory(variableExpressionParser.ExpressionRule(), "Block identifier not specified"),
                 spacingParser.Spacing(),
-                limitsParser.endCode(),
+                Mandatory(limitsParser.endCode(), "Missing end of code island"),
                 compositeNodeParser.NodeRule(),
-                limitsParser.startCode(), spacingParser.Spacing(),
+                limitsParser.startCode(),
+                spacingParser.Spacing(),
                 lexicParser.Keyword(Keyword.END_BLOCK),
                 Optional(
                         spacingParser.Mandatory(),
@@ -37,7 +39,7 @@ public class BlockNodeParser extends NodeParser<BlockNode> {
                         throwExceptionIfNonSameVariableName()
                 ),
                 spacingParser.Spacing(),
-                limitsParser.endCode(),
+                Mandatory(limitsParser.endCode(), "Missing end of code island"),
                 push(new BlockNode(
                         positionTrackerParser.pop(2),
                         variableExpressionParser.pop(1),
@@ -52,7 +54,7 @@ public class BlockNodeParser extends NodeParser<BlockNode> {
         VariableExpression original = variableExpressionParser.peek(1);
 
         if (!expression.getIdentifier().equals(original.getIdentifier())) {
-            addError(String.format("Expecting block %s to end with the same identifier but found %s instead", original.getIdentifier(), expression.getIdentifier()));
+            addError(String.format("Expecting block '%s' to end with the same identifier but found '%s' instead", original.getIdentifier(), expression.getIdentifier()));
         }
         return true;
     }

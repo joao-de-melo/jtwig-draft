@@ -33,13 +33,15 @@ public class JtwigTemplate {
         RenderContext renderContext = renderContext()
                 .withConfiguration(configuration)
                 .withValueContext(model)
+                .withResource(template)
                 .build();
 
         RenderContextHolder.set(renderContext);
 
-        compositeNode
-                .render(renderContext)
-                .accept(outputStream);
+        renderContext
+            .nodeRenderer()
+            .render(compositeNode)
+            .accept(outputStream);
     }
 
 }
