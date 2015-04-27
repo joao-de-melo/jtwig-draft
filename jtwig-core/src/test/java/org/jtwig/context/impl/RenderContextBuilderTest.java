@@ -3,7 +3,10 @@ package org.jtwig.context.impl;
 import org.jtwig.JtwigModel;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
+import org.jtwig.context.values.ValueContext;
 import org.junit.Test;
+
+import javax.xml.bind.ValidationEvent;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -15,7 +18,7 @@ public class RenderContextBuilderTest {
     @Test
     public void buildShouldSetAModel() throws Exception {
         RenderContext context = RenderContextBuilder.renderContext().build();
-        assertThat(context.model(), notNullValue());
+        assertThat(context.valueContext(), notNullValue());
     }
 
     @Test
@@ -30,11 +33,11 @@ public class RenderContextBuilderTest {
 
     @Test
     public void buildShouldSetTheSameModel() throws Exception {
-        JtwigModel jtwigModel = mock(JtwigModel.class);
+        ValueContext jtwigModel = mock(ValueContext.class);
         RenderContext context = RenderContextBuilder.renderContext()
-            .withModel(jtwigModel)
+            .withValueContext(jtwigModel)
             .build();
 
-        assertThat(context.model(), is(jtwigModel));
+        assertThat(context.valueContext(), is(jtwigModel));
     }
 }

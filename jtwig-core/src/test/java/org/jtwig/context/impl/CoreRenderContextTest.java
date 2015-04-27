@@ -1,12 +1,9 @@
 package org.jtwig.context.impl;
 
-import org.jtwig.JtwigModel;
 import org.jtwig.configuration.Configuration;
-import org.jtwig.context.model.Renderer;
+import org.jtwig.context.model.NodeContext;
 import org.jtwig.context.model.ResourceContext;
-import org.jtwig.functions.resolver.FunctionResolver;
-import org.jtwig.model.tree.Node;
-import org.jtwig.resource.Resource;
+import org.jtwig.context.values.ValueContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,9 +16,9 @@ import static org.mockito.Mockito.mock;
 
 public class CoreRenderContextTest {
     private final Configuration configuration = mock(Configuration.class, RETURNS_DEEP_STUBS);
-    private final Stack<JtwigModel> modelStack = new Stack<JtwigModel>();
+    private final Stack<ValueContext> modelStack = new Stack<>();
     private final Stack<ResourceContext> resourceContextStack = new Stack<ResourceContext>();
-    private final Stack<Node> nodeContextStack = new Stack<>();
+    private final Stack<NodeContext> nodeContextStack = new Stack<>();
     private CoreRenderContext underTest = new CoreRenderContext(configuration, modelStack, resourceContextStack, nodeContextStack);
 
     @Before
@@ -50,10 +47,10 @@ public class CoreRenderContextTest {
 
     @Test
     public void model() throws Exception {
-        JtwigModel model = mock(JtwigModel.class);
+        ValueContext model = mock(ValueContext.class);
         modelStack.push(model);
 
-        JtwigModel result = underTest.model();
+        ValueContext result = underTest.valueContext();
 
         assertThat(result, is(model));
     }

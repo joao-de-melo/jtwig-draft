@@ -1,12 +1,12 @@
 package org.jtwig.context.impl;
 
 import org.apache.commons.lang3.builder.Builder;
-import org.jtwig.JtwigModel;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
+import org.jtwig.context.model.NodeContext;
 import org.jtwig.context.model.ResourceContext;
-import org.jtwig.functions.resolver.FunctionResolver;
-import org.jtwig.model.tree.Node;
+import org.jtwig.context.values.SimpleValueContext;
+import org.jtwig.context.values.ValueContext;
 import org.jtwig.util.JtwigValue;
 
 import java.util.HashMap;
@@ -22,25 +22,24 @@ public class RenderContextBuilder implements Builder<RenderContext> {
     private RenderContextBuilder() {}
 
     private Configuration configuration;
-    private JtwigModel model = new JtwigModel(new HashMap<String, JtwigValue>());
+    private ValueContext valueContext = new SimpleValueContext(new HashMap<String, JtwigValue>());
 
     public RenderContextBuilder withConfiguration(Configuration configuration) {
         this.configuration = configuration;
         return this;
     }
 
-    public RenderContextBuilder withModel(JtwigModel model) {
-        this.model = model;
+    public RenderContextBuilder withValueContext(ValueContext valueContext) {
+        this.valueContext = valueContext;
         return this;
     }
 
     @Override
     public RenderContext build() {
-        JtwigModel model = this.model;
-        Stack<JtwigModel> modelStack = new Stack<>();
-        modelStack.push(model);
+        Stack<ValueContext> valueContextStack = new Stack<>();
         Stack<ResourceContext> resourceContextStack = new Stack<>();
-        Stack<Node> nodeContextStack = new Stack<>();
-        return new CoreRenderContext(configuration, modelStack, resourceContextStack, nodeContextStack);
+        Stack<NodeContext> nodeContextStack = new Stack<>();
+        valueContextStack.push(valueContext);
+        return new CoreRenderContext(configuration, valueContextStack, resourceContextStack, nodeContextStack);
     }
 }

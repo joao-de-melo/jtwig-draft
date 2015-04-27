@@ -14,7 +14,7 @@ public class ContentNode extends Node {
 
     @Override
     public Renderable render(RenderContext context) {
-        return context.renderer()
+        return context.nodeRenderer()
                 .render(content);
     }
 }

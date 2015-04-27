@@ -2,6 +2,7 @@ package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.model.expression.Expression;
@@ -37,13 +38,11 @@ public class ImportNode extends Node {
                 .configuration().resourceResolver()
                 .resolve(context.currentResource().resource(), path);
         ResourceRenderResult resourceRenderResult = context
-                .renderer()
+                .resourceRenderer()
                 .render(resource.or(throwException(path)));
-        context.model().define(aliasIdentifier.getIdentifier(), resourceRenderResult.context().macro());
+        context.valueContext().add(aliasIdentifier.getIdentifier(), resourceRenderResult.context().macro());
         return EmptyRenderable.instance();
     }
-
-
 
 
     private Supplier<Resource> throwException (final String path) {

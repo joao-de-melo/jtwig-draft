@@ -1,7 +1,7 @@
 package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
-import org.jtwig.context.model.Renderer;
+import org.jtwig.context.impl.ResourceRenderer;
 import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.model.position.Position;
 import org.jtwig.model.tree.include.IncludeConfiguration;
@@ -22,7 +22,7 @@ public class IncludeNodeTest extends AbstractNodeTest {
 
     private final Position position = mock(Position.class);
     private final IncludeConfiguration configuration = mock(IncludeConfiguration.class, RETURNS_DEEP_STUBS);
-    private final Renderer renderer = renderContext().renderer();
+    private final ResourceRenderer resourceRenderer = renderContext().resourceRenderer();
     private IncludeNode underTest = new IncludeNode(position, configuration);
 
 
@@ -57,9 +57,9 @@ public class IncludeNodeTest extends AbstractNodeTest {
         when(configuration.getInclude().calculate(renderContext())).thenReturn(new JtwigValue(path));
         when(configuration.isIgnoreMissing()).thenReturn(true);
         when(renderContext().configuration().resourceResolver().resolve(any(Resource.class), eq(path))).thenReturn(Optional.of(resource));
-        when(renderer.inheritModel(anyBoolean())).thenReturn(renderer);
-        when(renderer.define(anyMap())).thenReturn(renderer);
-        when(renderer.render(resource)).thenReturn(renderResult);
+        when(resourceRenderer.inheritModel(anyBoolean())).thenReturn(resourceRenderer);
+        when(resourceRenderer.define(anyMap())).thenReturn(resourceRenderer);
+        when(resourceRenderer.render(resource)).thenReturn(renderResult);
 
         Renderable result = underTest.render(renderContext());
 

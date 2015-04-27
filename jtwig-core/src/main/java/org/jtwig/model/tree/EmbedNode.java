@@ -2,6 +2,7 @@ package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.model.expression.Expression;
@@ -50,7 +51,7 @@ public class EmbedNode extends Node {
             return EmptyRenderable.instance();
         } else {
 
-            ResourceRenderResult renderResult = context.renderer()
+            ResourceRenderResult renderResult = context.resourceRenderer()
                     .inheritModel(includeConfiguration.isInheritModel())
                     .define(includeConfiguration.getMap().calculate(context).asMap())
                     .render(resource.or(throwException(path)));
@@ -60,7 +61,7 @@ public class EmbedNode extends Node {
                     .merge(renderResult.context());
 
             for (Node node : nodes) {
-                context.renderer().render(node);
+                context.nodeRenderer().render(node);
             }
 
             return renderResult.renderable();

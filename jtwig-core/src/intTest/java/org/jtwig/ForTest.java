@@ -17,15 +17,29 @@ public class ForTest extends AbstractIntegrationTest {
     @Test
     public void simpleFor() throws Exception {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% for i in list %}{{i}}{% endfor %}");
-        String result = jtwigTemplate.render(newModel().define("list", new Integer[]{1,2}));
+        String result = jtwigTemplate.render(newModel().with("list", new Integer[]{1, 2}));
 
         assertThat(result, is("12"));
+    }
+    @Test
+    public void forIsolatedContextOldVariable() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate("{% set a = 2 %}{% for i in list %}{% set a = 1 %}{% endfor %}{{ a }}");
+        String result = jtwigTemplate.render(newModel().with("list", new Integer[]{1, 2}));
+
+        assertThat(result, is("1"));
+    }
+    @Test
+    public void forIsolatedContextNewVariable() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate("{% for i in list %}{% set a = 1 %}{% endfor %}{{ a }}");
+        String result = jtwigTemplate.render(newModel().with("list", new Integer[]{1, 2}));
+
+        assertThat(result, is(""));
     }
 
     @Test
     public void simpleForMap() throws Exception {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% for k,v in list %}{{k}}={{v}} {% endfor %}");
-        String result = jtwigTemplate.render(newModel().define("list", new Integer[]{1,2}));
+        String result = jtwigTemplate.render(newModel().with("list", new Integer[]{1,2}));
 
         assertThat(result, is("0=1 1=2 "));
     }

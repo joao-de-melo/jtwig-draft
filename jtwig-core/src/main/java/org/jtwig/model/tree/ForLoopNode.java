@@ -1,9 +1,11 @@
 package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
+
 import org.jtwig.context.RenderContext;
-import org.jtwig.model.expression.VariableExpression;
+import org.jtwig.context.values.ScopeType;
 import org.jtwig.model.expression.Expression;
+import org.jtwig.model.expression.VariableExpression;
 import org.jtwig.model.position.Position;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.CompositeRenderable;
@@ -39,10 +41,6 @@ public class ForLoopNode extends ContentNode {
         return keyVariableExpression;
     }
 
-    public Expression getExpression() {
-        return expression;
-    }
-
     @Override
     public CompositeRenderable render(RenderContext context) {
         Collection<Renderable> renderables = new ArrayList<>();
@@ -50,9 +48,9 @@ public class ForLoopNode extends ContentNode {
             Map<Object, Object> objects = expression.calculate(context).asMap();
             Cursor cursor = new Cursor(new ArrayList<>(objects.entrySet()));
             for (Map.Entry<Object, Object> entry : objects.entrySet()) {
-                context.model().define(keyVariableExpression.get().getIdentifier(), entry.getKey());
-                context.model().define(variableExpression.getIdentifier(), entry.getValue());
-                context.model().define("loop", cursor);
+                context.valueContext().add(keyVariableExpression.get().getIdentifier(), entry.getKey());
+                context.valueContext().add(variableExpression.getIdentifier(), entry.getValue());
+                context.valueContext().add("loop", cursor);
                 renderables.add(super.render(context));
                 cursor.step();
             }
@@ -60,12 +58,17 @@ public class ForLoopNode extends ContentNode {
             Collection<Object> objects = expression.calculate(context).asCollection();
             Cursor cursor = new Cursor(objects);
             for (Object value : objects) {
-                context.model().define(variableExpression.getIdentifier(), value);
-                context.model().define("loop", cursor);
+                context.valueContext().add(variableExpression.getIdentifier(), value);
+                context.valueContext().add("loop", cursor);
                 renderables.add(super.render(context));
                 cursor.step();
             }
         }
         return new CompositeRenderable(renderables);
+    }
+
+    @Override
+    public ScopeType scopeType() {
+        return ScopeType.SHARE_EDIT_OLD;
     }
 }

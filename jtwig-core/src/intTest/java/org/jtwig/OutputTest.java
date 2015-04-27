@@ -18,7 +18,7 @@ public class OutputTest extends AbstractIntegrationTest {
     public void output() throws Exception {
         JtwigTemplate template = defaultStringTemplate(" {{ variable }} ");
 
-        String result = template.render(newModel().define("variable", "hello"));
+        String result = template.render(newModel().with("variable", "hello"));
 
         assertThat(result, is(" hello "));
     }
@@ -27,7 +27,7 @@ public class OutputTest extends AbstractIntegrationTest {
     public void outputWithStripLeftWhiteSpace() throws Exception {
         JtwigTemplate template = defaultStringTemplate(" {{- variable }} ");
 
-        String result = template.render(newModel().define("variable", "hello"));
+        String result = template.render(newModel().with("variable", "hello"));
 
         assertThat(result, is("hello "));
     }
@@ -36,7 +36,7 @@ public class OutputTest extends AbstractIntegrationTest {
     public void outputWithStripRightWhiteSpace() throws Exception {
         JtwigTemplate template = defaultStringTemplate(" {{ variable -}} ");
 
-        String result = template.render(newModel().define("variable", "hello"));
+        String result = template.render(newModel().with("variable", "hello"));
 
         assertThat(result, is(" hello"));
     }
@@ -45,7 +45,7 @@ public class OutputTest extends AbstractIntegrationTest {
     public void outputWithStripBothWhiteSpace() throws Exception {
         JtwigTemplate template = defaultStringTemplate(" {{- variable -}} ");
 
-        String result = template.render(newModel().define("variable", "hello"));
+        String result = template.render(newModel().with("variable", "hello"));
 
         assertThat(result, is("hello"));
     }

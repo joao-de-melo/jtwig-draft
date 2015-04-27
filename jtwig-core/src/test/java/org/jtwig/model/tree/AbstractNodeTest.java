@@ -24,7 +24,7 @@ public abstract class AbstractNodeTest {
     }
 
     protected void render(Node node, String content) {
-        when(renderContext.renderer().render(node)).thenReturn(new ByteArrayRenderable(content.getBytes()));
+        when(renderContext.nodeRenderer().render(node)).thenReturn(new ByteArrayRenderable(content.getBytes()));
     }
 
     public RenderContext renderContext() {

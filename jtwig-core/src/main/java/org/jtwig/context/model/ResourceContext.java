@@ -3,6 +3,7 @@ package org.jtwig.context.model;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
+import org.jtwig.context.values.ValueContext;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.OverrideRenderable;
 import org.jtwig.resource.Resource;
@@ -13,12 +14,14 @@ public class ResourceContext {
     private final Resource resource;
     private final Map<String, Macro> macros;
     private final Map<String, Renderable> blocks;
+    private final ValueContext valueContext;
     private Optional<String> currentBlock = Optional.absent();
 
-    public ResourceContext(Resource resource, Map<String, Macro> macros, Map<String, Renderable> blocks) {
+    public ResourceContext(Resource resource, Map<String, Macro> macros, Map<String, Renderable> blocks, ValueContext valueContext) {
         this.resource = resource;
         this.macros = macros;
         this.blocks = blocks;
+        this.valueContext = valueContext;
     }
 
     public void register(String name, Macro macro) {
@@ -69,5 +72,9 @@ public class ResourceContext {
 
     public void endBlock() {
         this.currentBlock = Optional.absent();
+    }
+
+    public ValueContext getValueContext() {
+        return valueContext;
     }
 }

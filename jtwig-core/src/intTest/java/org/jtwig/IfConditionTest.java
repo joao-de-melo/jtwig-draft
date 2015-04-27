@@ -24,10 +24,19 @@ public class IfConditionTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void simpleIfSharedContext() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate("{% set a = 2 %}{% if (true) %}{% set a = 1 %}{% endif %}{{ a }}");
+
+        String result = jtwigTemplate.render(newModel());
+
+        assertThat(result, is("1"));
+    }
+
+    @Test
     public void simpleIfConditionWithVariable() throws Exception {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% if (isItTrue) %}ok{% else %}ko{% endif %}");
 
-        String result = jtwigTemplate.render(newModel().define("isItTrue", true));
+        String result = jtwigTemplate.render(newModel().with("isItTrue", true));
 
         assertThat(result, is("ok"));
     }

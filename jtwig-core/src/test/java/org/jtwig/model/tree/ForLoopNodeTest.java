@@ -5,12 +5,9 @@ import org.jtwig.context.RenderContext;
 import org.jtwig.model.expression.Expression;
 import org.jtwig.model.expression.VariableExpression;
 import org.jtwig.model.position.Position;
-import org.jtwig.render.model.CompositeRenderable;
 import org.jtwig.util.JtwigValue;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -31,16 +28,16 @@ public class ForLoopNodeTest {
         LinkedHashMap<Object, Object> map = new LinkedHashMap<>();
         map.put("hello", "one");
         when(expression.calculate(renderContext)).thenReturn(new JtwigValue(map));
-        when(renderContext.model()).thenReturn(jtwigModel);
+        when(renderContext.valueContext()).thenReturn(jtwigModel);
         when(keyVariableExpression.getIdentifier()).thenReturn("key");
         when(variableExpression.getIdentifier()).thenReturn("value");
 
         new ForLoopNode(position, keyVariableExpression, variableExpression, expression, node)
                 .render(renderContext);
 
-        verify(jtwigModel).define("key", "hello");
-        verify(jtwigModel).define("value", "one");
-        verify(jtwigModel).define(eq("loop"), any());
+        verify(jtwigModel).add("key", "hello");
+        verify(jtwigModel).add("value", "one");
+        verify(jtwigModel).add(eq("loop"), any());
     }
 
     @Test
@@ -48,18 +45,18 @@ public class ForLoopNodeTest {
         JtwigModel jtwigModel = mock(JtwigModel.class);
         List<String> list = asList("hello", "test");
         when(expression.calculate(renderContext)).thenReturn(new JtwigValue(list));
-        when(renderContext.model()).thenReturn(jtwigModel);
+        when(renderContext.valueContext()).thenReturn(jtwigModel);
         when(keyVariableExpression.getIdentifier()).thenReturn("key");
         when(variableExpression.getIdentifier()).thenReturn("value");
 
         new ForLoopNode(position, keyVariableExpression, variableExpression, expression, node)
                 .render(renderContext);
 
-        verify(jtwigModel).define("key", 0);
-        verify(jtwigModel).define("key", 1);
-        verify(jtwigModel).define("value", "hello");
-        verify(jtwigModel).define("value", "test");
-        verify(jtwigModel, times(2)).define(eq("loop"), any());
+        verify(jtwigModel).add("key", 0);
+        verify(jtwigModel).add("key", 1);
+        verify(jtwigModel).add("value", "hello");
+        verify(jtwigModel).add("value", "test");
+        verify(jtwigModel, times(2)).add(eq("loop"), any());
     }
 
     @Test
@@ -67,14 +64,14 @@ public class ForLoopNodeTest {
         JtwigModel jtwigModel = mock(JtwigModel.class);
         List<String> list = asList("hello", "test");
         when(expression.calculate(renderContext)).thenReturn(new JtwigValue(list));
-        when(renderContext.model()).thenReturn(jtwigModel);
+        when(renderContext.valueContext()).thenReturn(jtwigModel);
         when(variableExpression.getIdentifier()).thenReturn("value");
 
         new ForLoopNode(position, variableExpression, null, expression, node)
                 .render(renderContext);
 
-        verify(jtwigModel).define("value", "hello");
-        verify(jtwigModel).define("value", "test");
-        verify(jtwigModel, times(2)).define(eq("loop"), any());
+        verify(jtwigModel).add("value", "hello");
+        verify(jtwigModel).add("value", "test");
+        verify(jtwigModel, times(2)).add(eq("loop"), any());
     }
 }

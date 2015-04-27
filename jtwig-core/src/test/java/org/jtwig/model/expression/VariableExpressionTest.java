@@ -23,7 +23,7 @@ public class VariableExpressionTest {
     @Test
     public void calculateWhenVariableDefined() throws Exception {
         JtwigValue value = new JtwigValue("one");
-        when(context.model().resolve(identifier)).thenReturn(Optional.of(value));
+        when(context.valueContext().value(identifier)).thenReturn(Optional.of(value));
 
         JtwigValue result = underTest.calculate(context);
 
@@ -33,7 +33,7 @@ public class VariableExpressionTest {
     @Test
     public void calculateWhenVariableUndefinedAndStrictModeDisabled() throws Exception {
         when(context.configuration().parameter(BooleanConfigurationParameters.STRICT_MODE)).thenReturn(false);
-        when(context.model().resolve(identifier)).thenReturn(Optional.<JtwigValue>absent());
+        when(context.valueContext().value(identifier)).thenReturn(Optional.<JtwigValue>absent());
 
         JtwigValue result = underTest.calculate(context);
 
@@ -43,7 +43,7 @@ public class VariableExpressionTest {
     @Test(expected = CalculationException.class)
     public void calculateWhenVariableUndefinedAndStrictModeEnabled() throws Exception {
         when(context.configuration().parameter(BooleanConfigurationParameters.STRICT_MODE)).thenReturn(true);
-        when(context.model().resolve(identifier)).thenReturn(Optional.<JtwigValue>absent());
+        when(context.valueContext().value(identifier)).thenReturn(Optional.<JtwigValue>absent());
 
         underTest.calculate(context);
     }

@@ -3,7 +3,6 @@ package org.jtwig;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.RenderContextHolder;
-import org.jtwig.context.impl.RenderContextBuilder;
 import org.jtwig.model.tree.Node;
 import org.jtwig.resource.Resource;
 
@@ -33,7 +32,7 @@ public class JtwigTemplate {
 
         RenderContext renderContext = renderContext()
                 .withConfiguration(configuration)
-                .withModel(model)
+                .withValueContext(model)
                 .build();
 
         RenderContextHolder.set(renderContext);

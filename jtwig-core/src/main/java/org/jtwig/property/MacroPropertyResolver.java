@@ -4,13 +4,18 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.RenderContextHolder;
+import org.jtwig.context.impl.NodeRenderer;
+import org.jtwig.context.impl.RenderContextBuilder;
 import org.jtwig.context.model.Macro;
 import org.jtwig.context.model.MacroContext;
-import org.jtwig.context.model.Renderer;
+import org.jtwig.context.impl.ResourceRenderer;
+import org.jtwig.context.values.SimpleValueContext;
+import org.jtwig.context.values.ValueContext;
 import org.jtwig.functions.FunctionArgument;
 import org.jtwig.util.JtwigValue;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class MacroPropertyResolver implements PropertyResolver {
@@ -31,24 +36,33 @@ public class MacroPropertyResolver implements PropertyResolver {
             @Override
             public JtwigValue apply(Macro macro) {
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                Renderer renderer = getRenderContext()
-                        .renderer()
-                        .inheritModel(false);
+
+
+                ValueContext valueContext = new SimpleValueContext(new HashMap<String, JtwigValue>());
 
                 Iterator<FunctionArgument> valueIterator = request.getArguments().iterator();
                 for (String variableName : macro.getArgumentNames()) {
                     if (valueIterator.hasNext()) {
-                        renderer.define(variableName, valueIterator.next().getValue().asObject());
+                        valueContext.add(variableName, valueIterator.next().getValue().asObject());
                     }
                 }
 
-                renderer
-                        .render(macro.getContent())
-                        .accept(outputStream);
+                renderContextBuilder()
+                    .withConfiguration(getRenderContext().configuration())
+                    .withValueContext(valueContext)
+                    .build()
+                    .nodeRenderer()
+                    .render(macro.getContent())
+                    .accept(outputStream);
 
                 return new JtwigValue(outputStream.toString());
             }
         };
+    }
+
+    // Test purposes
+    protected RenderContextBuilder renderContextBuilder() {
+        return RenderContextBuilder.renderContext();
     }
 
     // Test purposes

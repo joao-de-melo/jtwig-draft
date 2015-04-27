@@ -24,7 +24,7 @@ public class CompositeNode extends Node {
     public Renderable render(RenderContext context) {
         Collection<Renderable> renderables = new ArrayList<>();
         for (Node node : nodes) {
-            renderables.add(context.renderer().render(node));
+            renderables.add(context.nodeRenderer().render(node));
         }
         return new CompositeRenderable(renderables);
     }

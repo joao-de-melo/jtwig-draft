@@ -1,7 +1,8 @@
 package org.jtwig.context.model;
 
 import com.google.common.base.Optional;
-import org.jtwig.context.RenderContext;
+
+import org.jtwig.context.values.ValueContext;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.OverrideRenderable;
 import org.jtwig.resource.Resource;
@@ -22,7 +23,8 @@ public class ResourceContextTest {
     private final Resource resource = mock(Resource.class);
     private final HashMap<String, Macro> macros = new HashMap<>();
     private final Map<String, Renderable> blocks = new HashMap<>();
-    private ResourceContext underTest = new ResourceContext(resource, macros, blocks);
+    private ValueContext valueContext = mock(ValueContext.class);
+    private ResourceContext underTest = new ResourceContext(resource, macros, blocks, valueContext);
 
     @Before
     public void setUp() throws Exception {
@@ -71,7 +73,7 @@ public class ResourceContextTest {
         HashMap<String, Renderable> blocks = new HashMap<String, Renderable>() {{
             put("one", renderable);
         }};
-        ResourceContext input = new ResourceContext(resource, macros, blocks);
+        ResourceContext input = new ResourceContext(resource, macros, blocks, valueContext);
 
         ResourceContext result = underTest.merge(input);
 

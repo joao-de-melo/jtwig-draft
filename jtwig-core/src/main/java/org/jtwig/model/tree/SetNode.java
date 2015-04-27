@@ -27,7 +27,8 @@ public class SetNode extends Node {
 
     @Override
     public Renderable render(RenderContext context) {
-        context.model().define(variableExpression.getIdentifier(), expression.calculate(context).asObject());
+        Object value = expression.calculate(context).asObject();
+        context.valueContext().add(variableExpression.getIdentifier(), value);
         return EmptyRenderable.instance();
     }
 }

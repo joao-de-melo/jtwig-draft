@@ -1,11 +1,11 @@
 package org.jtwig.context.impl;
 
-import org.jtwig.JtwigModel;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
-import org.jtwig.context.model.Renderer;
+import org.jtwig.context.model.NodeContext;
 import org.jtwig.context.model.ResourceContext;
-import org.jtwig.model.tree.Node;
+import org.jtwig.context.values.SimpleValueContext;
+import org.jtwig.context.values.ValueContext;
 import org.jtwig.util.JtwigValue;
 
 import java.util.HashMap;
@@ -13,16 +13,16 @@ import java.util.Stack;
 
 class CoreRenderContext implements RenderContext {
     private final Configuration configuration;
-    private final Stack<JtwigModel> modelStack;
+    private final Stack<ValueContext> valueContextStack;
     private final Stack<ResourceContext> resourceContextStack;
-    private final Stack<Node> nodeContextStack;
+    private final Stack<NodeContext> nodeContextStack;
 
     public CoreRenderContext(Configuration configuration,
-                             Stack<JtwigModel> modelStack,
+                             Stack<ValueContext> valueContextStack,
                              Stack<ResourceContext> resourceContextStack,
-                             Stack<Node> nodeContextStack) {
+                             Stack<NodeContext> nodeContextStack) {
         this.configuration = configuration;
-        this.modelStack = modelStack;
+        this.valueContextStack = valueContextStack;
         this.resourceContextStack = resourceContextStack;
         this.nodeContextStack = nodeContextStack;
     }
@@ -33,8 +33,13 @@ class CoreRenderContext implements RenderContext {
     }
 
     @Override
-    public Renderer renderer() {
-        return new Renderer(this, modelStack, resourceContextStack, nodeContextStack, new JtwigModel(new HashMap<String, JtwigValue>()));
+    public ResourceRenderer resourceRenderer() {
+        return new ResourceRenderer(this, resourceContextStack, valueContextStack, new SimpleValueContext(new HashMap<String, JtwigValue>()));
+    }
+
+    @Override
+    public NodeRenderer nodeRenderer() {
+        return new NodeRenderer(this, nodeContextStack, valueContextStack);
     }
 
     @Override
@@ -43,7 +48,7 @@ class CoreRenderContext implements RenderContext {
     }
 
     @Override
-    public JtwigModel model() {
-        return modelStack.peek();
+    public ValueContext valueContext() {
+        return valueContextStack.peek();
     }
 }

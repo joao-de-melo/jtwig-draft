@@ -28,7 +28,7 @@ public class JtwigValue implements Comparable<JtwigValue> {
     }
 
     public String asString() {
-        if (value == null) return null;
+        if (value == null) return "";
         else {
             return value.toString();
         }

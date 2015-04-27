@@ -34,7 +34,7 @@ public class ImportNodeTest extends AbstractNodeTest {
 
         Renderable result = underTest.render(renderContext());
 
-        verify(renderContext().model()).define(eq(ALIAS), any(MacroContext.class));
+        verify(renderContext().valueContext()).add(eq(ALIAS), any(MacroContext.class));
         assertThat(renderResult(result), is(""));
     }
 }

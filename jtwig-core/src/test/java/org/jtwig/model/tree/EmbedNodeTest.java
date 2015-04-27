@@ -1,7 +1,7 @@
 package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
-import org.jtwig.context.model.Renderer;
+import org.jtwig.context.impl.ResourceRenderer;
 import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.model.expression.Expression;
 import org.jtwig.model.position.Position;
@@ -26,7 +26,7 @@ public class EmbedNodeTest extends AbstractNodeTest {
     private final Expression includeExpression = mock(Expression.class);
     private final Expression mapExpression = mock(Expression.class);
     private final IncludeConfiguration includeConfiguration = mock(IncludeConfiguration.class, RETURNS_DEEP_STUBS);
-    private final Renderer renderer = renderContext().renderer();
+    private final ResourceRenderer resourceRenderer = renderContext().resourceRenderer();
     private final Resource resource = mock(Resource.class);
     private EmbedNode underTest = new EmbedNode(position, nodes, includeConfiguration);
 
@@ -52,31 +52,9 @@ public class EmbedNodeTest extends AbstractNodeTest {
         when(includeConfiguration.getInclude()).thenReturn(includeExpression);
         when(includeConfiguration.isIgnoreMissing()).thenReturn(false);
         when(renderContext().configuration().resourceResolver().resolve(any(Resource.class), anyString())).thenReturn(Optional.<Resource>absent());
-        when(renderer.inheritModel(anyBoolean())).thenReturn(renderer);
-        when(renderer.define(anyMap())).thenReturn(renderer);
+        when(resourceRenderer.inheritModel(anyBoolean())).thenReturn(resourceRenderer);
+        when(resourceRenderer.define(anyMap())).thenReturn(resourceRenderer);
 
         underTest.render(renderContext());
-    }
-
-    @Test
-    public void renderWithNodes() throws Exception {
-        Node node = mock(Node.class);
-        nodes.add(node);
-        Resource resource = mock(Resource.class);
-        Renderable renderable = mock(Renderable.class);
-        ResourceRenderResult renderResult = mock(ResourceRenderResult.class);
-
-        when(includeExpression.calculate(renderContext())).thenReturn(new JtwigValue("test"));
-        when(includeConfiguration.isIgnoreMissing()).thenReturn(false);
-        when(renderContext().configuration().resourceResolver().resolve(any(Resource.class), anyString())).thenReturn(Optional.of(resource));
-        when(renderer.inheritModel(anyBoolean())).thenReturn(renderer);
-        when(renderer.define(anyMap())).thenReturn(renderer);
-        when(renderer.render(resource)).thenReturn(renderResult);
-        when(renderResult.renderable()).thenReturn(renderable);
-
-        Renderable result = underTest.render(renderContext());
-
-        verify(renderer).render(node);
-        assertThat(result, is(renderable));
     }
 }

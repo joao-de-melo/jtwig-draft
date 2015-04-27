@@ -1,6 +1,7 @@
 package org.jtwig.model.expression;
 
 import com.google.common.base.Optional;
+
 import org.jtwig.context.RenderContext;
 import org.jtwig.exceptions.CalculationException;
 import org.jtwig.model.position.Position;
@@ -23,7 +24,7 @@ public class VariableExpression extends Expression {
 
     @Override
     public JtwigValue calculate(RenderContext context) {
-        Optional<JtwigValue> valueOptional = context.model().resolve(identifier);
+        Optional<JtwigValue> valueOptional = context.valueContext().value(identifier);
         if (valueOptional.isPresent()) {
             return valueOptional.get();
         } else {

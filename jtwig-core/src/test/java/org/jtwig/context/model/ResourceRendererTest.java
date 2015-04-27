@@ -3,37 +3,37 @@ package org.jtwig.context.model;
 import org.jtwig.JtwigModel;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
+import org.jtwig.context.impl.ResourceRenderer;
+import org.jtwig.context.values.ValueContext;
 import org.jtwig.model.tree.Node;
 import org.jtwig.parser.JtwigParser;
 import org.jtwig.render.Renderable;
 import org.jtwig.resource.Resource;
-import org.jtwig.resource.ResourceResolver;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Stack;
 
-import static junit.framework.Assert.assertSame;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-public class RendererTest {
+public class ResourceRendererTest {
     private final RenderContext renderContext = mock(RenderContext.class);
-    private final Stack<JtwigModel> modelStack = new Stack<>();
     private final Stack<ResourceContext> contextStack = new Stack<>();
-    private final Stack<Node> nodeStack = new Stack<>();
+    private final Stack<ValueContext> valueContextStack = new Stack<>();
     private final JtwigModel firstModel = mock(JtwigModel.class);
     private final JtwigModel model = mock(JtwigModel.class);
-    private Renderer underTest = new Renderer(renderContext, modelStack, contextStack, nodeStack, model);
+    private ResourceRenderer underTest = new ResourceRenderer(renderContext, contextStack, valueContextStack, model);
 
     @Before
     public void setUp() throws Exception {
-        modelStack.clear();
         contextStack.clear();
-        nodeStack.clear();
-        modelStack.push(firstModel);
+        valueContextStack.clear();
+        valueContextStack.push(firstModel);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class RendererTest {
 
         underTest.define("one", value);
 
-        verify(model).define("one", value);
+        verify(model).add("one", value);
     }
 
     @Test
@@ -54,20 +54,8 @@ public class RendererTest {
 
         underTest.define(map);
 
-        verify(model).define("one", value);
-        verify(model).define("one1", value);
-    }
-
-    @Test
-    public void renderNode() throws Exception {
-        Node node = mock(Node.class);
-        Renderable renderable = mock(Renderable.class);
-        when(node.render(renderContext)).thenReturn(renderable);
-
-        Renderable result = underTest.render(node);
-
-        assertSame(result, renderable);
-        verify(model).merge(firstModel);
+        verify(model).add("one", value);
+        verify(model).add("one1", value);
     }
 
     @Test
@@ -85,7 +73,6 @@ public class RendererTest {
 
         ResourceRenderResult result = underTest.render(resource);
 
-        verify(model).merge(firstModel);
         assertThat(result.renderable(), is(renderable));
         assertThat(result.resource(), is(resource));
     }
@@ -105,7 +92,6 @@ public class RendererTest {
 
         ResourceRenderResult result = underTest.render(resource);
 
-        verify(model, never()).merge(firstModel);
         assertThat(result.renderable(), is(renderable));
         assertThat(result.resource(), is(resource));
     }

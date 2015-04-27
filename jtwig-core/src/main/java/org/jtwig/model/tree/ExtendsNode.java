@@ -2,6 +2,7 @@ package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.model.expression.Expression;
@@ -38,7 +39,7 @@ public class ExtendsNode extends Node {
                 .resolve(context.currentResource().resource(), path);
 
         ResourceRenderResult resourceRenderResult = context
-                .renderer()
+                .resourceRenderer()
                 .render(extendResource.or(throwException(path)));
 
         context
@@ -46,12 +47,11 @@ public class ExtendsNode extends Node {
                 .merge(resourceRenderResult.context());
 
         for (Node node : nodes) {
-            context.renderer().render(node);
+            context.nodeRenderer().render(node);
         }
 
         return resourceRenderResult.renderable();
     }
-
 
     private Supplier<Resource> throwException (final String path) {
         return new Supplier<Resource>() {

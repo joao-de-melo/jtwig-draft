@@ -44,7 +44,7 @@ public class IncludeNode extends Node {
         if (configuration.isIgnoreMissing() && !resource.isPresent()) {
             return EmptyRenderable.instance();
         } else {
-            return context.renderer()
+            return context.resourceRenderer()
                     .inheritModel(configuration.isInheritModel())
                     .define(configuration.getMap().calculate(context).asMap())
                     .render(resource.or(throwException(path)))

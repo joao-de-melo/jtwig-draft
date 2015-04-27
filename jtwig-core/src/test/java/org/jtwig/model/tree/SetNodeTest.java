@@ -28,7 +28,7 @@ public class SetNodeTest extends AbstractNodeTest {
 
         Renderable result = underTest.render(renderContext());
 
-        verify(renderContext().model()).define(eq("one"), eq(value));
+        verify(renderContext().valueContext()).add(eq("one"), eq(value));
         assertThat(renderResult(result), is(""));
     }
 }
