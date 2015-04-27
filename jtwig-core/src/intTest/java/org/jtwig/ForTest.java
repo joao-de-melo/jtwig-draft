@@ -21,6 +21,15 @@ public class ForTest extends AbstractIntegrationTest {
 
         assertThat(result, is("12"));
     }
+
+    @Test
+    public void forWhiteSpaceControl() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate(" {%- for i in list -%} {{i}} {%- endfor -%} ");
+        String result = jtwigTemplate.render(newModel().with("list", new Integer[]{1, 2}));
+
+        assertThat(result, is("12"));
+    }
+
     @Test
     public void forIsolatedContextOldVariable() throws Exception {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% set a = 2 %}{% for i in list %}{% set a = 1 %}{% endfor %}{{ a }}");
