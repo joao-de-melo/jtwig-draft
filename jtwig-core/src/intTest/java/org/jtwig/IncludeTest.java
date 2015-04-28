@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.jtwig.JtwigModel.newModel;
 
 public class IncludeTest extends AbstractIntegrationTest {
     @Rule
@@ -17,7 +18,7 @@ public class IncludeTest extends AbstractIntegrationTest {
     public void includingResourceFile() throws Exception {
         JtwigTemplate template = defaultStringTemplate("{% include 'classpath:/example/classpath-template.twig' %}");
 
-        String result = template.render(JtwigModel.newModel());
+        String result = template.render(newModel());
 
         assertThat(result, is("Hello"));
     }
@@ -26,7 +27,7 @@ public class IncludeTest extends AbstractIntegrationTest {
     public void includingResourceRelativeFile() throws Exception {
         JtwigTemplate template = defaultStringTemplate("{% include 'classpath:/example/classpath-include.twig' %}");
 
-        String result = template.render(JtwigModel.newModel());
+        String result = template.render(newModel());
 
         assertThat(result, is("Hello World"));
     }
@@ -37,7 +38,7 @@ public class IncludeTest extends AbstractIntegrationTest {
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Include missing path expression"));
 
-        template.render(JtwigModel.newModel());
+        template.render(newModel());
     }
 
     @Test
@@ -46,7 +47,7 @@ public class IncludeTest extends AbstractIntegrationTest {
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Code island not closed"));
 
-        template.render(JtwigModel.newModel());
+        template.render(newModel());
     }
 
     @Test
@@ -55,7 +56,7 @@ public class IncludeTest extends AbstractIntegrationTest {
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Did you mean 'ignore missing'?"));
 
-        template.render(JtwigModel.newModel());
+        template.render(newModel());
     }
 
     @Test
@@ -64,6 +65,6 @@ public class IncludeTest extends AbstractIntegrationTest {
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Expecting map of values"));
 
-        template.render(JtwigModel.newModel());
+        template.render(newModel());
     }
 }
