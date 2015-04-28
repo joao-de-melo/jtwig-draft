@@ -23,6 +23,15 @@ public class IncludeTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void includingResourceRelativeFile() throws Exception {
+        JtwigTemplate template = defaultStringTemplate("{% include 'classpath:/example/classpath-include.twig' %}");
+
+        String result = template.render(JtwigModel.newModel());
+
+        assertThat(result, is("Hello World"));
+    }
+
+    @Test
     public void includeMissingExpression() throws Exception {
         JtwigTemplate template = defaultStringTemplate("{% include %}");
         expectedException.expect(ParseException.class);
