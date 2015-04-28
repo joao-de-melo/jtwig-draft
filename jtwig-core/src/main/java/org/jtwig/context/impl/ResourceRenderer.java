@@ -7,6 +7,7 @@ import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.context.values.ScopedValueContext;
 import org.jtwig.context.values.ValueContext;
 import org.jtwig.render.Renderable;
+import org.jtwig.render.model.OverrideRenderable;
 import org.jtwig.resource.Resource;
 
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class ResourceRenderer {
 
     public ResourceRenderResult render(Resource resource) {
         ValueContext valueContext = valueContext(inheritModel);
-        ResourceContext resourceContext = new ResourceContext(resource, new HashMap<String, Macro>(), new HashMap<String, Renderable>(), valueContext);
+        ResourceContext resourceContext = new ResourceContext(resource, new HashMap<String, Macro>(), new HashMap<String, OverrideRenderable>(), valueContext);
         valueContextStack.push(valueContext);
         resourceContextStack.push(resourceContext);
 

@@ -6,8 +6,6 @@ import org.jtwig.model.position.Position;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.FutureRenderable;
 
-import static java.util.Arrays.asList;
-
 public class BlockNode extends ContentNode {
     private final VariableExpression blockIdentifier;
     private final Node content;
@@ -30,9 +28,9 @@ public class BlockNode extends ContentNode {
     @Override
     public Renderable render(RenderContext context) {
         FutureRenderable futureRenderable = new FutureRenderable();
-        context.currentResource().register(blockIdentifier.getIdentifier(), futureRenderable);
+        Renderable renderable = context.currentResource().register(blockIdentifier.getIdentifier(), futureRenderable);
         futureRenderable.complete(super.render(context));
         context.currentResource().endBlock();
-        return futureRenderable;
+        return renderable;
     }
 }

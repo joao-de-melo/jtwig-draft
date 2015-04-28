@@ -2,6 +2,7 @@ package org.jtwig.context.impl;
 
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.model.NodeContext;
+import org.jtwig.context.values.ScopeType;
 import org.jtwig.context.values.ScopedValueContext;
 import org.jtwig.context.values.ValueContext;
 import org.jtwig.model.tree.Node;
@@ -40,6 +41,7 @@ public class NodeRendererTest {
     @Test
     public void render() throws Exception {
         Node node = mock(Node.class);
+        when(node.scopeType()).thenReturn(ScopeType.SHARE);
         final Renderable renderable = mock(Renderable.class);
         when(node.render(renderContext)).thenAnswer(new Answer<Renderable>() {
             @Override

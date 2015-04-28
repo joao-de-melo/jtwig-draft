@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.verify;
 public class ResourceContextTest {
     private final Resource resource = mock(Resource.class);
     private final HashMap<String, Macro> macros = new HashMap<>();
-    private final Map<String, Renderable> blocks = new HashMap<>();
+    private final Map<String, OverrideRenderable> blocks = new HashMap<>();
     private ValueContext valueContext = mock(ValueContext.class);
     private ResourceContext underTest = new ResourceContext(resource, macros, blocks, valueContext);
 
@@ -47,7 +48,7 @@ public class ResourceContextTest {
 
         underTest.register("one", renderable);
 
-        assertThat(blocks.get("one"), is(renderable));
+        assertThat(blocks.get("one"), instanceOf(OverrideRenderable.class));
     }
 
     @Test
@@ -67,10 +68,10 @@ public class ResourceContextTest {
 
     @Test
     public void merge() throws Exception {
-        final Renderable renderable = mock(Renderable.class);
+        final OverrideRenderable renderable = mock(OverrideRenderable.class);
         Resource resource = mock(Resource.class);
         HashMap<String, Macro> macros = new HashMap<>();
-        HashMap<String, Renderable> blocks = new HashMap<String, Renderable>() {{
+        HashMap<String, OverrideRenderable> blocks = new HashMap<String, OverrideRenderable>() {{
             put("one", renderable);
         }};
         ResourceContext input = new ResourceContext(resource, macros, blocks, valueContext);
@@ -103,7 +104,7 @@ public class ResourceContextTest {
     @Test
     public void currentBlockWhenOverrideBlock() throws Exception {
         OutputStream outputStream = mock(OutputStream.class);
-        blocks.put("test", mock(Renderable.class));
+        blocks.put("test", new OverrideRenderable(mock(Renderable.class)));
         Renderable renderable = mock(Renderable.class);
         underTest.register("test", renderable);
 
@@ -124,12 +125,12 @@ public class ResourceContextTest {
 
     @Test
     public void blockWhenBlock() throws Exception {
-        Renderable renderable = mock(Renderable.class);
+        OverrideRenderable renderable = mock(OverrideRenderable.class);
         blocks.put("one", renderable);
 
         Optional<Renderable> result = underTest.block("one");
 
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get(), is(renderable));
+        assertSame(result.get(), renderable);
     }
 }

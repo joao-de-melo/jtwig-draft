@@ -13,11 +13,11 @@ import java.util.Map;
 public class ResourceContext {
     private final Resource resource;
     private final Map<String, Macro> macros;
-    private final Map<String, Renderable> blocks;
+    private final Map<String, OverrideRenderable> blocks;
     private final ValueContext valueContext;
     private Optional<String> currentBlock = Optional.absent();
 
-    public ResourceContext(Resource resource, Map<String, Macro> macros, Map<String, Renderable> blocks, ValueContext valueContext) {
+    public ResourceContext(Resource resource, Map<String, Macro> macros, Map<String, OverrideRenderable> blocks, ValueContext valueContext) {
         this.resource = resource;
         this.macros = macros;
         this.blocks = blocks;
@@ -32,15 +32,16 @@ public class ResourceContext {
         return resource;
     }
 
-    public void register(String name, Renderable renderable) {
+    public Renderable register(String name, Renderable renderable) {
         this.currentBlock = Optional.of(name);
         if (blocks.containsKey(name)) {
-            OverrideRenderable overrideRenderable = new OverrideRenderable(blocks.get(name))
-                .overrideWith(renderable);
-
-            blocks.put(name, overrideRenderable);
+            OverrideRenderable override = new OverrideRenderable(renderable);
+            blocks.get(name).overrideWith(override);
+            return override;
         } else {
-            blocks.put(name, renderable);
+            OverrideRenderable overrideRenderable = new OverrideRenderable(renderable);
+            blocks.put(name, overrideRenderable);
+            return overrideRenderable;
         }
     }
 
@@ -67,7 +68,7 @@ public class ResourceContext {
     }
 
     public Optional<Renderable> block(String blockName) {
-        return Optional.fromNullable(blocks.get(blockName));
+        return Optional.<Renderable>fromNullable(blocks.get(blockName));
     }
 
     public void endBlock() {
