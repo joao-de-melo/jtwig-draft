@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import org.jtwig.functions.resolver.FunctionResolver;
 import org.jtwig.parser.JtwigParser;
 import org.jtwig.property.PropertyResolver;
-import org.jtwig.resource.ResourceResolver;
+import org.jtwig.resource.resolver.ResourceResolver;
 
 public interface Configuration {
     JtwigParser parser();

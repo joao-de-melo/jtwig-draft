@@ -5,7 +5,7 @@ import com.google.common.base.Optional;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
 import org.jtwig.context.impl.NodeRenderer;
-import org.jtwig.context.impl.RenderContextBuilder;
+import org.jtwig.context.RenderContextBuilder;
 import org.jtwig.context.model.Macro;
 import org.jtwig.context.model.MacroContext;
 import org.jtwig.context.values.ValueContext;

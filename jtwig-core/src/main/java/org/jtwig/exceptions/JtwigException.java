@@ -8,4 +8,8 @@ public class JtwigException extends RuntimeException {
     public JtwigException(Throwable cause) {
         super(cause);
     }
+
+    public JtwigException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

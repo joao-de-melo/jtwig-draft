@@ -1,10 +1,9 @@
-package org.jtwig.resource;
+package org.jtwig.resource.resolver;
 
 import com.google.common.base.Optional;
 
-import java.net.URI;
+import org.jtwig.resource.Resource;
 
 public interface ResourceResolver {
-    Optional<Resource> resolve(URI uri);
     Optional<Resource> resolve(Resource resource, String relativePath);
 }

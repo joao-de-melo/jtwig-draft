@@ -11,7 +11,7 @@ import org.jtwig.util.JtwigValue;
 import java.util.HashMap;
 import java.util.Stack;
 
-class CoreRenderContext implements RenderContext {
+public class CoreRenderContext implements RenderContext {
     private final Configuration configuration;
     private final Stack<ValueContext> valueContextStack;
     private final Stack<ResourceContext> resourceContextStack;

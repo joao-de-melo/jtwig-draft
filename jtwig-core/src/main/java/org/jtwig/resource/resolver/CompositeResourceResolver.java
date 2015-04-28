@@ -1,8 +1,9 @@
-package org.jtwig.resource;
+package org.jtwig.resource.resolver;
 
 import com.google.common.base.Optional;
 
-import java.net.URI;
+import org.jtwig.resource.Resource;
+
 import java.util.Collection;
 
 public class CompositeResourceResolver implements ResourceResolver {
@@ -10,18 +11,6 @@ public class CompositeResourceResolver implements ResourceResolver {
 
     public CompositeResourceResolver(Collection<ResourceResolver> resourceResolvers) {
         this.resourceResolvers = resourceResolvers;
-    }
-
-    @Override
-    public Optional<Resource> resolve(URI uri) {
-        for (ResourceResolver resourceResolver : resourceResolvers) {
-            Optional<Resource> result = resourceResolver.resolve(uri);
-            if (result.isPresent()) {
-                return result;
-            }
-        }
-
-        return Optional.absent();
     }
 
     @Override

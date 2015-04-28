@@ -9,7 +9,7 @@ import org.jtwig.model.expression.Expression;
 import org.jtwig.model.position.Position;
 import org.jtwig.render.Renderable;
 import org.jtwig.resource.Resource;
-import org.jtwig.resource.ResourceNotFoundException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 
 import java.util.Collection;
 

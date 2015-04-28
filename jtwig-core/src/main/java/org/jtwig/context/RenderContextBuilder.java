@@ -1,8 +1,8 @@
-package org.jtwig.context.impl;
+package org.jtwig.context;
 
 import org.apache.commons.lang3.builder.Builder;
 import org.jtwig.configuration.Configuration;
-import org.jtwig.context.RenderContext;
+import org.jtwig.context.impl.CoreRenderContext;
 import org.jtwig.context.model.Macro;
 import org.jtwig.context.model.NodeContext;
 import org.jtwig.context.model.ResourceContext;

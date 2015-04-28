@@ -11,7 +11,7 @@ import org.jtwig.model.tree.include.IncludeConfiguration;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.EmptyRenderable;
 import org.jtwig.resource.Resource;
-import org.jtwig.resource.ResourceNotFoundException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 
 import java.util.Collection;
 

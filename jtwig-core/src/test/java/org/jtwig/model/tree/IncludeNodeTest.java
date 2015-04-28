@@ -7,7 +7,7 @@ import org.jtwig.model.position.Position;
 import org.jtwig.model.tree.include.IncludeConfiguration;
 import org.jtwig.render.Renderable;
 import org.jtwig.resource.Resource;
-import org.jtwig.resource.ResourceNotFoundException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 import org.jtwig.util.JtwigValue;
 import org.junit.Test;
 

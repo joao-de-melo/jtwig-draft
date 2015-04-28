@@ -9,7 +9,7 @@ import org.jtwig.resource.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import static org.jtwig.context.impl.RenderContextBuilder.renderContext;
+import static org.jtwig.context.RenderContextBuilder.renderContext;
 
 public class JtwigTemplate {
 

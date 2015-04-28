@@ -29,12 +29,12 @@ public class IncludeNodeParser extends NodeParser<IncludeNode> {
                 positionTrackerParser.PushPosition(),
                 limitsParser.startCode(), spacingParser.Spacing(),
                 lexicParser.Keyword(Keyword.INCLUDE), spacingParser.Mandatory(),
-                anyExpressionParser.ExpressionRule(),
+                Mandatory(anyExpressionParser.ExpressionRule(), "Include missing path expression"),
                 FirstOf(
                         Sequence(
                                 spacingParser.Spacing(),
-                                String("ignore"), spacingParser.Spacing(),
-                                String("missing"),
+                                String("ignore"), spacingParser.Mandatory(),
+                                Mandatory(String("missing"), "Did you mean 'ignore missing'?"),
                                 booleanParser.push(true)
                         ),
                         booleanParser.push(false)
@@ -43,7 +43,7 @@ public class IncludeNodeParser extends NodeParser<IncludeNode> {
                         Sequence(
                                 spacingParser.Spacing(),
                                 String("with"), spacingParser.Spacing(),
-                                anyExpressionParser.ExpressionRule()
+                                Mandatory(anyExpressionParser.ExpressionRule(), "Expecting map of values")
                         ),
                         anyExpressionParser.push(new MapExpression(positionTrackerParser.currentPosition(), new HashMap<Expression, Expression>()))
                 ),
@@ -55,6 +55,9 @@ public class IncludeNodeParser extends NodeParser<IncludeNode> {
                         ),
                         booleanParser.push(false)
                 ),
+
+                spacingParser.Spacing(),
+                Mandatory(limitsParser.endCode(), "Code island not closed"),
                 push(new IncludeNode(
                         positionTrackerParser.pop(4),
                         new IncludeConfiguration(

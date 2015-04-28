@@ -1,12 +1,10 @@
 package org.jtwig.context.impl;
 
-import org.jtwig.JtwigModel;
 import org.jtwig.configuration.Configuration;
 import org.jtwig.context.RenderContext;
+import org.jtwig.context.RenderContextBuilder;
 import org.jtwig.context.values.ValueContext;
 import org.junit.Test;
-
-import javax.xml.bind.ValidationEvent;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;

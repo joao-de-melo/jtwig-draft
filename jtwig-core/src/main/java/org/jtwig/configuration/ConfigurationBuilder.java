@@ -9,8 +9,10 @@ import org.jtwig.parser.JtwigParser;
 import org.jtwig.parser.JtwigParserBuilder;
 import org.jtwig.parser.config.ParserConfigurationBuilder;
 import org.jtwig.property.*;
-import org.jtwig.resource.CompositeResourceResolver;
-import org.jtwig.resource.ResourceResolver;
+import org.jtwig.resource.classpath.ResourceLoader;
+import org.jtwig.resource.resolver.ClasspathResourceResolver;
+import org.jtwig.resource.resolver.CompositeResourceResolver;
+import org.jtwig.resource.resolver.ResourceResolver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,6 +76,9 @@ public class ConfigurationBuilder implements Builder<Configuration> {
             propertyResolvers.add(new MethodPropertyResolver(MethodPropertyResolver.prefixedEqual("is")));
             propertyResolvers.add(new MethodPropertyResolver(MethodPropertyResolver.prefixedEqual("has")));
             propertyResolvers.add(new MacroPropertyResolver());
+
+            // Resource loaders
+            resourceResolvers.add(new ClasspathResourceResolver(new ResourceLoader(getClass().getClassLoader())));
         }
 
         propertyResolvers.addAll(this.propertyResolvers);

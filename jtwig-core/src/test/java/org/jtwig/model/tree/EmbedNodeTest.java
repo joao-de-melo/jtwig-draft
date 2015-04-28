@@ -2,13 +2,12 @@ package org.jtwig.model.tree;
 
 import com.google.common.base.Optional;
 import org.jtwig.context.impl.ResourceRenderer;
-import org.jtwig.context.model.ResourceRenderResult;
 import org.jtwig.model.expression.Expression;
 import org.jtwig.model.position.Position;
 import org.jtwig.model.tree.include.IncludeConfiguration;
 import org.jtwig.render.Renderable;
 import org.jtwig.resource.Resource;
-import org.jtwig.resource.ResourceNotFoundException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 import org.jtwig.util.JtwigValue;
 import org.junit.Before;
 import org.junit.Test;

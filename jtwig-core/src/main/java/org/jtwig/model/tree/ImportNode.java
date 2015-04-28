@@ -11,7 +11,7 @@ import org.jtwig.model.position.Position;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.EmptyRenderable;
 import org.jtwig.resource.Resource;
-import org.jtwig.resource.ResourceNotFoundException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 
 public class ImportNode extends Node {
     private final Expression importExpression;
