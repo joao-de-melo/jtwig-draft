@@ -1,5 +1,6 @@
-package org.jtwig;
+package org.jtwig.integration;
 
+import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -165,6 +166,15 @@ public class IfConditionTest extends AbstractIntegrationTest {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% if (false) %}ko{% else if (true) %}ok{% endif %}");
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Expecting ending of else block"));
+        jtwigTemplate.render(newModel());
+    }
+
+    @Test
+    public void ifConditionMissingEnd() throws Exception {
+        // For the time being we will use this, but we might want to improve our messages and try to check the if syntax
+        JtwigTemplate jtwigTemplate = defaultStringTemplate("{% if (false) %}ko");
+        expectedException.expect(ParseException.class);
+        expectedException.expectMessage(containsString("Missing endif tag"));
         jtwigTemplate.render(newModel());
     }
 }

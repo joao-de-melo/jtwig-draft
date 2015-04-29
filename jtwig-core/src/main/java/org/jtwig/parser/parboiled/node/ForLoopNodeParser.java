@@ -53,11 +53,11 @@ public class ForLoopNodeParser extends NodeParser<ForLoopNode> {
             compositeNodeParser.NodeRule(),
 
             // End
-            Sequence(
+            Mandatory(Sequence(
                 limitsParser.startCode(), spacingParser.Spacing(),
                 lexicParser.Keyword(Keyword.END_FOR), spacingParser.Spacing(),
                 Mandatory(limitsParser.endCode(), "Malformed for loop end syntax, missing code island ending symbol")
-            ),
+            ), "Missing endfor tag"),
 
             push(new ForLoopNode(
                 positionTrackerParser.pop(4),

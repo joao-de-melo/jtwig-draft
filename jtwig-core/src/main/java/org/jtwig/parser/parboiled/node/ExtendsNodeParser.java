@@ -2,10 +2,12 @@ package org.jtwig.parser.parboiled.node;
 
 import org.jtwig.model.tree.ExtendsNode;
 import org.jtwig.model.tree.Node;
+import org.jtwig.parser.ParseException;
 import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.parboiled.base.*;
 import org.jtwig.parser.parboiled.expression.AnyExpressionParser;
 import org.jtwig.parser.parboiled.model.Keyword;
+import org.jtwig.util.ErrorMessageFormatter;
 import org.parboiled.Rule;
 
 import java.util.ArrayList;
@@ -32,8 +34,10 @@ public class ExtendsNodeParser extends NodeParser<ExtendsNode> {
                 limitsParser.startCode(), spacingParser.Spacing(),
                 parserContext().parser(LexicParser.class).Keyword(Keyword.EXTENDS),
                 spacingParser.Spacing(),
-                anyExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                limitsParser.endCode(), spacingParser.Spacing(),
+                Mandatory(anyExpressionParser.ExpressionRule(), "Extends construct missing path expression"),
+                spacingParser.Spacing(),
+                Mandatory(limitsParser.endCode(), "Code island not closed"),
+                spacingParser.Spacing(),
 
                 definitionsParser.Definitions(),
                 spacingParser.Spacing(),
@@ -65,11 +69,27 @@ public class ExtendsNodeParser extends NodeParser<ExtendsNode> {
                                     Sequence(
                                             setNodeParser.NodeRule(),
                                             peek(1).add(setNodeParser.pop())
-                                    )
+                                    ),
+                                    Sequence(
+                                            parserContext().parser(CommentParser.class).Comment(),
+                                            parserContext().parser(SpacingParser.class).Spacing()
+                                    ),
+                                    invalidConstruct()
                             ),
                             parserContext().parser(SpacingParser.class).Spacing()
                     )
             );
+        }
+
+        public Rule invalidConstruct() {
+            return Sequence(
+                    ANY,
+                    throwException("Extends templates only allow you to specify either block or set constructs")
+            );
+        }
+
+        public boolean throwException(String message) {
+            throw new ParseException(ErrorMessageFormatter.errorMessage(parserContext().parser(PositionTrackerParser.class).currentPosition(), message));
         }
     }
 }

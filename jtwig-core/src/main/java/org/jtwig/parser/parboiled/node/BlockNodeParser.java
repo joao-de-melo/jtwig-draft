@@ -23,23 +23,30 @@ public class BlockNodeParser extends NodeParser<BlockNode> {
         CompositeNodeParser compositeNodeParser = parserContext().parser(CompositeNodeParser.class);
         return Sequence(
                 positionTrackerParser.PushPosition(),
-                limitsParser.startCode(), spacingParser.Spacing(),
-                lexicParser.Keyword(Keyword.BLOCK),
-                spacingParser.Mandatory(),
-                Mandatory(variableExpressionParser.ExpressionRule(), "Block identifier not specified"),
-                spacingParser.Spacing(),
-                Mandatory(limitsParser.endCode(), "Missing end of code island"),
-                compositeNodeParser.NodeRule(),
-                limitsParser.startCode(),
-                spacingParser.Spacing(),
-                lexicParser.Keyword(Keyword.END_BLOCK),
-                Optional(
+                Sequence(
+                        limitsParser.startCode(), spacingParser.Spacing(),
+                        lexicParser.Keyword(Keyword.BLOCK),
                         spacingParser.Mandatory(),
-                        variableExpressionParser.ExpressionRule(),
-                        throwExceptionIfNonSameVariableName()
+                        Mandatory(variableExpressionParser.ExpressionRule(), "Block identifier not specified"),
+                        spacingParser.Spacing(),
+                        Mandatory(limitsParser.endCode(), "Missing end of code island")
                 ),
-                spacingParser.Spacing(),
-                Mandatory(limitsParser.endCode(), "Missing end of code island"),
+
+                compositeNodeParser.NodeRule(),
+
+                Mandatory(Sequence(
+                        limitsParser.startCode(),
+                        spacingParser.Spacing(),
+                        lexicParser.Keyword(Keyword.END_BLOCK),
+                        Optional(
+                                spacingParser.Mandatory(),
+                                variableExpressionParser.ExpressionRule(),
+                                throwExceptionIfNonSameVariableName()
+                        ),
+                        spacingParser.Spacing(),
+                        Mandatory(limitsParser.endCode(), "Missing end of code island")
+                ), "Missing endblock tag"),
+
                 push(new BlockNode(
                         positionTrackerParser.pop(2),
                         variableExpressionParser.pop(1),

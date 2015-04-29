@@ -1,5 +1,6 @@
-package org.jtwig;
+package org.jtwig.integration;
 
+import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -103,6 +104,15 @@ public class ForTest extends AbstractIntegrationTest {
         JtwigTemplate jtwigTemplate = defaultStringTemplate("{% for k, in list %}");
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Expecting a second variable name in for loop. Example: {% for key, value in list %}"));
+
+        jtwigTemplate.render(newModel());
+    }
+
+    @Test
+    public void invalidForMissingEndTag() throws Exception {
+        JtwigTemplate jtwigTemplate = defaultStringTemplate("{% for k in list %}");
+        expectedException.expect(ParseException.class);
+        expectedException.expectMessage(containsString("Missing endfor tag"));
 
         jtwigTemplate.render(newModel());
     }

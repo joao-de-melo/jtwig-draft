@@ -24,6 +24,7 @@ public class ParserContext {
         createParser(SpacingParser.class, context);
         createParser(LexicParser.class, context);
         createParser(LimitsParser.class, context);
+        createParser(CommentParser.class, context);
 
         createParser(UnaryOperatorParser.class, context);
         createParser(BinaryOperatorParser.class, context);

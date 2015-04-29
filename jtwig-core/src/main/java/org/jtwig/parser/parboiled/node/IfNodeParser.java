@@ -75,11 +75,11 @@ public class IfNodeParser extends NodeParser<IfNode> {
                 ),
 
                 // End
-                Sequence(
+                Mandatory(Sequence(
                     limitsParser.startCode(), spacingParser.Spacing(),
                     lexicParser.Keyword(Keyword.END_IF), spacingParser.Spacing(),
                     Mandatory(limitsParser.endCode(), "If condition endif code island not closed")
-                )
+                ), "Missing endif tag")
             );
         }
 

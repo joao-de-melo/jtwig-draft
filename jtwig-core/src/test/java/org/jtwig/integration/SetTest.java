@@ -1,5 +1,6 @@
-package org.jtwig;
+package org.jtwig.integration;
 
+import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
 import org.junit.Rule;
 import org.junit.Test;

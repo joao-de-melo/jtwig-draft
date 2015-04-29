@@ -1,5 +1,6 @@
-package org.jtwig;
+package org.jtwig.integration;
 
+import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,6 +62,14 @@ public class BlockTest extends AbstractIntegrationTest {
         JtwigTemplate template = defaultStringTemplate("{% block one %}hello{% endblock name %}");
         expectedException.expect(ParseException.class);
         expectedException.expectMessage(containsString("Expecting block 'one' to end with the same identifier but found 'name' instead"));
+
+        template.render(newModel());
+    }
+    @Test
+    public void blockMissingEndTag() throws Exception {
+        JtwigTemplate template = defaultStringTemplate("{% block one %}hello");
+        expectedException.expect(ParseException.class);
+        expectedException.expectMessage(containsString("Missing endblock tag"));
 
         template.render(newModel());
     }

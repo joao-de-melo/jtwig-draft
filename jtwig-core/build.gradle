@@ -14,21 +14,6 @@ jacocoTestReport {
     }
 }
 
-sourceSets {
-    // Note that just declaring this source set creates two configurations
-    intTest {
-        java.srcDir file('src/intTest/java')
-        resources.srcDir file('src/intTest/resources')
-    }
-}
-
-task intTest(type:Test){
-    testClassesDir = sourceSets.intTest.output.classesDir
-    classpath = sourceSets.intTest.runtimeClasspath
-}
-
-check.dependsOn intTest
-
 dependencies {
     compile 'com.google.guava:guava'
     compile 'org.apache.commons:commons-lang3'
@@ -40,9 +25,4 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-all'
     testCompile 'org.mockito:mockito-all'
     testCompile 'junit:junit'
-
-    intTestCompile sourceSets.main.output
-    intTestCompile configurations.testCompile
-    intTestCompile sourceSets.test.output
-    intTestRuntime configurations.testRuntime
 }

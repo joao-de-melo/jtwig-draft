@@ -81,11 +81,11 @@ public class LexicParser extends BasicParser<String> {
         return keywordRules;
     }
 
-    Rule Letter() {
+    public Rule Letter() {
         return FirstOf(CharRange('a', 'z'), CharRange('A', 'Z'), '_', '$');
     }
 
-    Rule LetterOrDigit() {
+    public Rule LetterOrDigit() {
         return FirstOf(CharRange('a', 'z'), CharRange('A', 'Z'), CharRange('0', '9'), '_', '$');
     }
 }

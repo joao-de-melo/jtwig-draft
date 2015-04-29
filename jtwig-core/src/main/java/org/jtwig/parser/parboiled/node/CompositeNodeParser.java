@@ -1,23 +1,16 @@
 package org.jtwig.parser.parboiled.node;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import org.jtwig.model.tree.BlockNode;
 import org.jtwig.model.tree.CompositeNode;
-import org.jtwig.model.tree.IfNode;
 import org.jtwig.model.tree.Node;
 import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.parboiled.base.BasicParser;
-import org.jtwig.parser.parboiled.base.LimitsParser;
 import org.jtwig.parser.parboiled.base.PositionTrackerParser;
-import org.jtwig.parser.parboiled.base.SpacingParser;
 import org.parboiled.Rule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static java.util.Arrays.asList;
 import static org.parboiled.Parboiled.createParser;
 
 public class CompositeNodeParser extends NodeParser<CompositeNode> {
@@ -76,22 +69,12 @@ public class CompositeNodeParser extends NodeParser<CompositeNode> {
                     ZeroOrMore(
                             FirstOf(
                                     FirstOf(rules),
-                                    CommentRule()
+                                    parserContext().parser(CommentParser.class).Comment()
                             )
                     )
             );
         }
 
-        Rule CommentRule() {
-            LimitsParser limitsParser = parserContext().parser(LimitsParser.class);
-            return Sequence(
-                    limitsParser.startComment(),
-                    ZeroOrMore(
-                            TestNot(limitsParser.endComment()),
-                            ANY
-                    ),
-                    limitsParser.endComment()
-            );
-        }
+
     }
 }
