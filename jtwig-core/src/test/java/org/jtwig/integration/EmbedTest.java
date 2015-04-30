@@ -3,6 +3,7 @@ package org.jtwig.integration;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,6 +21,23 @@ public class EmbedTest extends AbstractIntegrationTest {
         JtwigTemplate template = defaultStringTemplate("{% embed 'classpath:/example/extends/extendable-template.twig' %}{% block one %}Ola{% endblock %}{% endembed %}");
         String result = template.render(JtwigModel.newModel());
         assertThat(result, is("Ola"));
+    }
+
+    @Test
+    public void embedResourceNotFound() throws Exception {
+        expectedException.expect(ResourceNotFoundException.class);
+        expectedException.expectMessage(containsString("Resource 'one' not found"));
+
+        defaultStringTemplate("{% embed 'one' %}{% endembed %}")
+                .render(JtwigModel.newModel());
+    }
+
+    @Test
+    public void embedResourceNotFoundIgnoreMissing() throws Exception {
+        String result = defaultStringTemplate("{% embed 'one' ignore missing %}{% endembed %}")
+                .render(JtwigModel.newModel());
+
+        assertThat(result, is(""));
     }
 
     @Test

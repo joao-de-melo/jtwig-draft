@@ -13,6 +13,7 @@ import org.jtwig.resource.classpath.ResourceLoader;
 import org.jtwig.resource.resolver.ClasspathResourceResolver;
 import org.jtwig.resource.resolver.CompositeResourceResolver;
 import org.jtwig.resource.resolver.ResourceResolver;
+import org.jtwig.resource.util.RelativePathResolver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,7 +79,7 @@ public class ConfigurationBuilder implements Builder<Configuration> {
             propertyResolvers.add(new MacroPropertyResolver());
 
             // Resource loaders
-            resourceResolvers.add(new ClasspathResourceResolver(new ResourceLoader(getClass().getClassLoader())));
+            resourceResolvers.add(new ClasspathResourceResolver(new ResourceLoader(getClass().getClassLoader()), new RelativePathResolver()));
         }
 
         propertyResolvers.addAll(this.propertyResolvers);

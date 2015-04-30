@@ -58,6 +58,7 @@ public class ExtendsNodeParser extends NodeParser<ExtendsNode> {
         Rule Definitions () {
             BlockNodeParser blockNodeParser = parserContext().parser(BlockNodeParser.class);
             SetNodeParser setNodeParser = parserContext().parser(SetNodeParser.class);
+            ImportNodeParser importNodeParser = parserContext().parser(ImportNodeParser.class);
             return Sequence(
                     push(new ArrayList<Node>()),
                     ZeroOrMore(
@@ -69,6 +70,10 @@ public class ExtendsNodeParser extends NodeParser<ExtendsNode> {
                                     Sequence(
                                             setNodeParser.NodeRule(),
                                             peek(1).add(setNodeParser.pop())
+                                    ),
+                                    Sequence(
+                                            importNodeParser.NodeRule(),
+                                            peek(1).add(importNodeParser.pop())
                                     ),
                                     Sequence(
                                             parserContext().parser(CommentParser.class).Comment(),

@@ -1,7 +1,6 @@
 package org.jtwig.resource.resolver;
 
 import com.google.common.base.Optional;
-
 import org.jtwig.resource.Resource;
 
 import java.util.Collection;
@@ -23,5 +22,9 @@ public class CompositeResourceResolver implements ResourceResolver {
         }
 
         return Optional.absent();
+    }
+
+    public int size() {
+        return resourceResolvers.size();
     }
 }

@@ -1,7 +1,9 @@
 package org.jtwig.integration;
 
+import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,6 +24,24 @@ public class IncludeTest extends AbstractIntegrationTest {
         String result = template.render(newModel());
 
         assertThat(result, is("Hello"));
+    }
+
+    @Test
+    public void includeResourceNotFound() throws Exception {
+        expectedException.expect(ResourceNotFoundException.class);
+        expectedException.expectMessage(containsString("Resource 'one' not found"));
+
+        defaultStringTemplate("{% include 'one' %}")
+                .render(JtwigModel.newModel());
+    }
+
+    @Test
+    public void includeResourceNotFoundIgnoreMissing() throws Exception {
+        String result = defaultStringTemplate("{% include 'one' ignore missing %}")
+                .render(JtwigModel.newModel());
+
+
+        assertThat(result, is(""));
     }
 
     @Test

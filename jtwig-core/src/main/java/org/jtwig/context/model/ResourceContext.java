@@ -2,7 +2,6 @@ package org.jtwig.context.model;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-
 import org.jtwig.context.values.ValueContext;
 import org.jtwig.render.Renderable;
 import org.jtwig.render.model.OverrideRenderable;
@@ -58,11 +57,7 @@ public class ResourceContext {
         return currentBlock.transform(new Function<String, OverrideRenderable>() {
             @Override
             public OverrideRenderable apply(String input) {
-                Renderable renderable = blocks.get(input);
-                if (renderable instanceof OverrideRenderable) {
-                    return (OverrideRenderable) renderable;
-                }
-                return new OverrideRenderable(renderable);
+                return blocks.get(input);
             }
         });
     }

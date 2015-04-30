@@ -3,6 +3,7 @@ package org.jtwig.integration;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import org.jtwig.parser.ParseException;
+import org.jtwig.resource.exceptions.ResourceNotFoundException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,6 +23,15 @@ public class ExtendsTest extends AbstractIntegrationTest {
         String result = template.render(JtwigModel.newModel());
 
         assertThat(result, is("Override"));
+    }
+
+    @Test
+    public void extendsResourceNotFound() throws Exception {
+        expectedException.expect(ResourceNotFoundException.class);
+        expectedException.expectMessage(containsString("Resource 'one' not found"));
+
+        defaultStringTemplate("{% extends 'one' %}{% block one %}Override{% endblock %}")
+                .render(JtwigModel.newModel());
     }
 
     @Test

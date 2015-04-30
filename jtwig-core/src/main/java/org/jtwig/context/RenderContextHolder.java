@@ -1,7 +1,9 @@
 package org.jtwig.context;
 
-public class RenderContextHolder {
+public final class RenderContextHolder {
     private static final ThreadLocal<RenderContext> current = new ThreadLocal<>();
+
+    private RenderContextHolder () {}
 
     public static RenderContext set (RenderContext context) {
         current.set(context);

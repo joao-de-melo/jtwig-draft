@@ -1,19 +1,21 @@
 package org.jtwig.resource.resolver;
 
 import com.google.common.base.Optional;
-
 import org.jtwig.resource.ClasspathResource;
 import org.jtwig.resource.Resource;
 import org.jtwig.resource.classpath.ResourceLoader;
+import org.jtwig.resource.util.RelativePathResolver;
 
 import java.io.File;
 
 public class ClasspathResourceResolver implements ResourceResolver {
     public static final String PREFIX = "classpath:";
     private final ResourceLoader resourceLoader;
+    private final RelativePathResolver relativePathResolver;
 
-    public ClasspathResourceResolver(ResourceLoader resourceLoader) {
+    public ClasspathResourceResolver(ResourceLoader resourceLoader, RelativePathResolver relativePathResolver) {
         this.resourceLoader = resourceLoader;
+        this.relativePathResolver = relativePathResolver;
     }
 
     @Override
@@ -25,7 +27,8 @@ public class ClasspathResourceResolver implements ResourceResolver {
         File file = new File(path);
         if (!file.isAbsolute()) {
             if (resource instanceof ClasspathResource) {
-                String absolutePath = ((ClasspathResource) resource).relativePath(path);
+                String originalPath = ((ClasspathResource) resource).getPath();
+                String absolutePath = relativePathResolver.resolve(originalPath, path);
                 return resolve(absolutePath);
             } else {
                 return Optional.absent();

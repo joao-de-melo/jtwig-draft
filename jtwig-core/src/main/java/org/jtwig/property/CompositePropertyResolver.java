@@ -23,4 +23,8 @@ public class CompositePropertyResolver implements PropertyResolver {
 
         return Optional.absent();
     }
+
+    public int size () {
+        return propertyResolvers.size();
+    }
 }

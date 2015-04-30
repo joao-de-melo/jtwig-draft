@@ -17,10 +17,6 @@ public class SetNode extends Node {
         this.expression = expression;
     }
 
-    public VariableExpression getVariableExpression() {
-        return variableExpression;
-    }
-
     public Expression getExpression() {
         return expression;
     }
