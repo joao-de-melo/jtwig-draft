@@ -10,6 +10,7 @@ import org.jtwig.parser.parboiled.expression.AnyExpressionParser;
 import org.jtwig.parser.parboiled.expression.VariableExpressionParser;
 import org.jtwig.parser.parboiled.model.Keyword;
 import org.parboiled.Rule;
+import org.parboiled.annotations.Label;
 
 public class ImportNodeParser extends NodeParser<ImportNode> {
     public ImportNodeParser(ParserContext context) {
@@ -17,6 +18,7 @@ public class ImportNodeParser extends NodeParser<ImportNode> {
     }
 
     @Override
+    @Label("Import Node")
     public Rule NodeRule() {
         LimitsParser limitsParser = parserContext().parser(LimitsParser.class);
         SpacingParser spacingParser = parserContext().parser(SpacingParser.class);
@@ -26,15 +28,18 @@ public class ImportNodeParser extends NodeParser<ImportNode> {
         PositionTrackerParser positionTrackerParser = parserContext().parser(PositionTrackerParser.class);
         return Sequence(
                 positionTrackerParser.PushPosition(),
-                limitsParser.startCode(), spacingParser.Spacing(),
+                limitsParser.startCode(),
+                spacingParser.Spacing(),
                 lexicParser.Keyword(Keyword.IMPORT),
                 spacingParser.Spacing(),
-                anyExpressionParser.ExpressionRule(),
+                Mandatory(anyExpressionParser.ExpressionRule(), "Missing import path expression"),
                 spacingParser.Spacing(),
-                String("as"), spacingParser.Spacing(),
-                variableExpressionParser.ExpressionRule(),
+                Mandatory(String("as"), "Wrong syntax expecting token 'as'"),
                 spacingParser.Spacing(),
-                limitsParser.endCode(),
+                Mandatory(variableExpressionParser.ExpressionRule(), "Missing alias declaration"),
+                spacingParser.Spacing(),
+                Mandatory(limitsParser.endCode(), "Code island not closed"),
+
                 push(new ImportNode(
                         positionTrackerParser.pop(2),
                         anyExpressionParser.pop(1),

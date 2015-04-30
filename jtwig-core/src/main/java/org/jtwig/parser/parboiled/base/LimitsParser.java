@@ -4,6 +4,7 @@ import org.jtwig.model.tree.TextNode;
 import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.parboiled.model.LimitProperties;
 import org.parboiled.Rule;
+import org.parboiled.annotations.Label;
 
 public class LimitsParser extends BasicParser<LimitProperties> {
     boolean whiteSpace = false;
@@ -45,6 +46,7 @@ public class LimitsParser extends BasicParser<LimitProperties> {
         );
     }
 
+    @Label("Start Code Island")
     public Rule startCode () {
         return Sequence(
                 parserContext().parserConfiguration().syntaxConfiguration().startCode(),
@@ -53,6 +55,7 @@ public class LimitsParser extends BasicParser<LimitProperties> {
         );
     }
 
+    @Label("End Code Island")
     public Rule endCode () {
         return Sequence(
                 LimitProperty(),

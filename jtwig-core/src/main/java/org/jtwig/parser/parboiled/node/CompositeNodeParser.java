@@ -6,6 +6,7 @@ import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.parboiled.base.BasicParser;
 import org.jtwig.parser.parboiled.base.PositionTrackerParser;
 import org.parboiled.Rule;
+import org.parboiled.annotations.Label;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ public class CompositeNodeParser extends NodeParser<CompositeNode> {
     }
 
     @Override
+    @Label("Composite Node")
     public Rule NodeRule() {
         PositionTrackerParser positionTrackerParser = parserContext().parser(PositionTrackerParser.class);
         NodeListParser nodeListParser = parserContext().parser(NodeListParser.class);

@@ -2,11 +2,8 @@ package org.jtwig.parser.parboiled.base;
 
 import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.parboiled.model.Keyword;
-import org.parboiled.BaseParser;
-import org.parboiled.Parboiled;
 import org.parboiled.Rule;
-
-import java.util.Collection;
+import org.parboiled.annotations.Label;
 
 public class LexicParser extends BasicParser<String> {
     Rule[] keywordRules = null;
@@ -62,8 +59,14 @@ public class LexicParser extends BasicParser<String> {
         return Sequence('\\', ANY);
     }
 
+    @Label("Keywork")
     public Rule Keyword(Keyword keyword) {
-        return String(keyword.toString());
+        return Sequence(
+                String(keyword.toString()),
+                TestNot(
+                        LetterOrDigit()
+                )
+        );
     }
 
     Rule Keyword() {
@@ -76,7 +79,7 @@ public class LexicParser extends BasicParser<String> {
         Keyword[] keywords = Keyword.values();
         keywordRules = new Rule[keywords.length];
         for (int i = 0; i < keywords.length; i++) {
-            keywordRules[i] = String(keywords[i].toString());
+            keywordRules[i] = Keyword(keywords[i]);
         }
         return keywordRules;
     }

@@ -2,7 +2,6 @@ package org.jtwig.parser;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.Builder;
 import org.jtwig.model.tree.Node;
@@ -12,13 +11,11 @@ import org.jtwig.parser.parboiled.DocumentParser;
 import org.jtwig.parser.parboiled.ParserContext;
 import org.jtwig.parser.util.ParboiledExceptionMessageExtractor;
 import org.jtwig.resource.Resource;
-import org.parboiled.common.FileUtils;
 import org.parboiled.errors.ParseError;
 import org.parboiled.errors.ParserRuntimeException;
 import org.parboiled.parserunners.BasicParseRunner;
 import org.parboiled.support.ParsingResult;
 
-import java.io.InputStream;
 import java.util.List;
 
 import static org.parboiled.common.FileUtils.readAllText;

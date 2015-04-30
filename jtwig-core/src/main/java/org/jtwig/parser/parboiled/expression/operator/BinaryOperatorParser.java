@@ -35,7 +35,7 @@ public class BinaryOperatorParser extends BasicParser<BinaryOperator> {
             put(BinaryOperator.SUBTRACT, operator(BinaryOperator.SUBTRACT, "-"));
             put(BinaryOperator.SUM, operator(BinaryOperator.SUM, "+"));
 
-//            put(BinaryOperator.SELECTION, operator(BinaryOperator.SELECTION, "."));
+            put(BinaryOperator.SELECTION, operator(BinaryOperator.SELECTION, "."));
             put(BinaryOperator.CONCAT, operator(BinaryOperator.CONCAT, "~"));
         }};
     }

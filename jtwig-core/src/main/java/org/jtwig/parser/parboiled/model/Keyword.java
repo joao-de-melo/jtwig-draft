@@ -22,7 +22,8 @@ public enum Keyword {
     FALSE("false"),
 
     // Internal
-    IN("in")
+    IN("in"),
+    AS("as")
     ;
 
     private final String symbol;

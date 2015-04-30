@@ -52,10 +52,6 @@ public class FunctionExpression extends Expression {
         }
     }
 
-    public String name() {
-        return functionIdentifier;
-    }
-
     public static class Arguments implements Iterable<Argument> {
         private final LinkedList<Argument> arguments;
 

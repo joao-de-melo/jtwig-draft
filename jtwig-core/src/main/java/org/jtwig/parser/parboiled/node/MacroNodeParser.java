@@ -35,19 +35,22 @@ public class MacroNodeParser extends NodeParser<MacroNode> {
                 Sequence(
                         limitsParser.startCode(), spacingParser.Spacing(),
                         lexicParser.Keyword(Keyword.MACRO), spacingParser.Spacing(),
-                        variableExpressionParser.ExpressionRule(), spacingParser.Spacing(),
-                        parametersParser.Parameters(), spacingParser.Spacing(),
-                        limitsParser.endCode()
+                        Mandatory(variableExpressionParser.ExpressionRule(), "Missing macro name"),
+                        spacingParser.Spacing(),
+                        Mandatory(parametersParser.Parameters(), "Missing macro arguments"),
+                        spacingParser.Spacing(),
+                        Mandatory(limitsParser.endCode(), "Code island not closed"),
+                        spacingParser.Spacing()
                 ),
 
                 nodeParser.NodeRule(),
 
                 // End
-                Sequence(
+                Mandatory(Sequence(
                         limitsParser.startCode(), spacingParser.Spacing(),
                         lexicParser.Keyword(Keyword.END_MACRO), spacingParser.Spacing(),
-                        limitsParser.endCode()
-                ),
+                        Mandatory(limitsParser.endCode(), "Code island not closed")
+                ), "Missing macroend tag"),
 
                 push(new MacroNode(
                         positionTrackerParser.pop(3),
