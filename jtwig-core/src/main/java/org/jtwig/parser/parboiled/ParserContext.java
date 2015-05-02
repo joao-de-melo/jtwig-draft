@@ -29,14 +29,18 @@ public class ParserContext {
         createParser(UnaryOperatorParser.class, context);
         createParser(BinaryOperatorParser.class, context);
 
+        createParser(EnumerationListExpressionParser.class, context);
+        createParser(ComprehensionListExpressionParser.class, context);
+        createParser(MapExpressionParser.class, context);
+        createParser(StringExpressionParser.class, context);
+        createParser(NumberExpressionParser.class, context);
+        createParser(BooleanExpressionParser.class, context);
         createParser(ConstantExpressionParser.class, context);
         createParser(VariableExpressionParser.class, context);
         createParser(FunctionExpressionParser.class, context);
         createParser(UnaryOperationExpressionParser.class, context);
         createParser(BinaryOperationExpressionParser.class, context);
         createParser(TernaryOperationExpressionParser.class, context);
-        createParser(EnumerationListExpressionParser.class, context);
-        createParser(ComprehensionListExpressionParser.class, context);
         createParser(PrimaryExpressionParser.class, context);
         createParser(AnyExpressionParser.class, context);
 

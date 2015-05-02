@@ -60,7 +60,7 @@ public class EmbedNodeParser extends NodeParser<EmbedNode> {
                                         anyExpressionParser.ExpressionRule(),
                                         spacingParser.Spacing()
                                 ),
-                                anyExpressionParser.push(new MapExpression(positionTrackerParser.currentPosition(), new HashMap<Expression, Expression>()))
+                                anyExpressionParser.push(new MapExpression(positionTrackerParser.currentPosition(), new HashMap<String, Expression>()))
                         ),
                         FirstOf(
                                 Sequence(

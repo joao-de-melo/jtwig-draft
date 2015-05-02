@@ -45,7 +45,7 @@ public class IncludeNodeParser extends NodeParser<IncludeNode> {
                                 String("with"), spacingParser.Spacing(),
                                 Mandatory(anyExpressionParser.ExpressionRule(), "Expecting map of values")
                         ),
-                        anyExpressionParser.push(new MapExpression(positionTrackerParser.currentPosition(), new HashMap<Expression, Expression>()))
+                        anyExpressionParser.push(new MapExpression(positionTrackerParser.currentPosition(), new HashMap<String, Expression>()))
                 ),
                 FirstOf(
                         Sequence(

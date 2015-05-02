@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 public class MapExpressionTest {
     private final Position position = mock(Position.class);
-    private final HashMap<Expression, Expression> map = new HashMap<>();
+    private final HashMap<String, Expression> map = new HashMap<>();
     private final RenderContext context = mock(RenderContext.class);
     private MapExpression underTest = new MapExpression(position, map);
 
@@ -33,9 +33,8 @@ public class MapExpressionTest {
 
     @Test
     public void calculateWhenNonEmpty() throws Exception {
-        Expression key = mock(Expression.class);
+        String key = "one";
         Expression value = mock(Expression.class);
-        when(key.calculate(context)).thenReturn(new JtwigValue("one"));
         when(value.calculate(context)).thenReturn(new JtwigValue("two"));
         map.put(key, value);
 
