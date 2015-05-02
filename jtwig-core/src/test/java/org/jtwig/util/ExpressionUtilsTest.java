@@ -1,6 +1,5 @@
 package org.jtwig.util;
 
-import org.jtwig.util.ExpressionUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -60,28 +59,28 @@ public class ExpressionUtilsTest {
 
     @Test
     public void numberAsString() throws Exception {
-        String result = ExpressionUtils.numberAsString(1);
+        String result = ExpressionUtils.numberAsString(1).get();
         assertThat(result, is("1"));
 
-        result = ExpressionUtils.numberAsString(1.1F);
+        result = ExpressionUtils.numberAsString(1.1F).get();
         assertThat(result, is("1.1"));
 
-        result = ExpressionUtils.numberAsString(1.1D);
+        result = ExpressionUtils.numberAsString(1.1D).get();
         assertThat(result, is("1.1"));
 
-        result = ExpressionUtils.numberAsString(0);
+        result = ExpressionUtils.numberAsString(0).get();
         assertThat(result, is("0"));
 
-        result = ExpressionUtils.numberAsString("-1");
+        result = ExpressionUtils.numberAsString("-1").get();
         assertThat(result, is("-1"));
 
-        result = ExpressionUtils.numberAsString(true);
+        result = ExpressionUtils.numberAsString(true).get();
         assertThat(result, is("1"));
 
-        result = ExpressionUtils.numberAsString(false);
+        result = ExpressionUtils.numberAsString(false).get();
         assertThat(result, is("0"));
 
-        result = ExpressionUtils.numberAsString(null);
+        result = ExpressionUtils.numberAsString(null).get();
         assertThat(result, is("0"));
     }
 }

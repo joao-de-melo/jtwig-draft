@@ -64,7 +64,7 @@ public class OutputTest extends AbstractIntegrationTest {
     public void outputWithoutExpression() throws Exception {
         JtwigTemplate template = defaultStringTemplate(" {{-  }} ");
         expectedException.expect(ParseException.class);
-        expectedException.expectMessage(containsString("Missing output expression"));
+        expectedException.expectMessage(containsString("Missing or invalid output expression"));
 
         template.render(newModel());
     }

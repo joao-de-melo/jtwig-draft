@@ -35,7 +35,8 @@ public class BinaryOperatorParser extends BasicParser<BinaryOperator> {
             put(BinaryOperator.SUBTRACT, operator(BinaryOperator.SUBTRACT, "-"));
             put(BinaryOperator.SUM, operator(BinaryOperator.SUM, "+"));
 
-            put(BinaryOperator.SELECTION, operator(BinaryOperator.SELECTION, "."));
+            put(BinaryOperator.SELECTION, operator(BinaryOperator.SELECTION, Sequence(".", TestNot("."))));
+            put(BinaryOperator.COMPOSITION, operator(BinaryOperator.COMPOSITION, "|"));
             put(BinaryOperator.CONCAT, operator(BinaryOperator.CONCAT, "~"));
         }};
     }
@@ -43,6 +44,13 @@ public class BinaryOperatorParser extends BasicParser<BinaryOperator> {
     Rule operator(BinaryOperator operator, String symbol) {
         return Sequence(
                 String(symbol),
+                push(operator)
+        );
+    }
+
+    Rule operator(BinaryOperator operator, Rule rule) {
+        return Sequence(
+                rule,
                 push(operator)
         );
     }

@@ -1,8 +1,7 @@
 package org.jtwig.util;
 
 import com.google.common.base.Objects;
-import org.jtwig.exceptions.CalculationException;
-import org.jtwig.model.position.Position;
+import com.google.common.base.Supplier;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -42,7 +41,16 @@ public class JtwigValue implements Comparable<JtwigValue> {
         if (value instanceof BigDecimal) {
             return (BigDecimal) value;
         }
-        return new BigDecimal(ExpressionUtils.numberAsString(value));
+        return new BigDecimal(ExpressionUtils.numberAsString(value).or(throwInvalidNumber(value)));
+    }
+
+    private Supplier<String> throwInvalidNumber(final Object representation) {
+        return new Supplier<String>() {
+            @Override
+            public String get() {
+                throw new IllegalArgumentException(String.format("Unable to convert '%s' into a number", representation));
+            }
+        };
     }
 
     public Boolean asBoolean () {
@@ -98,5 +106,31 @@ public class JtwigValue implements Comparable<JtwigValue> {
             result.put(index++, next);
         }
         return result;
+    }
+
+    public Type getType () {
+        if (value instanceof String) {
+            if (((String) value).length() == 1) {
+                return Type.CHAR;
+            }
+            return Type.STRING;
+        } else if (ExpressionUtils.numberAsString(value).isPresent()) {
+            return Type.NUMBER;
+        } else if (value instanceof Character) {
+            return Type.CHAR;
+        } else {
+            return Type.OBJECT;
+        }
+    }
+
+    public Character asChar() {
+        return asString().charAt(0);
+    }
+
+    public enum Type {
+        NUMBER,
+        STRING,
+        CHAR,
+        OBJECT
     }
 }

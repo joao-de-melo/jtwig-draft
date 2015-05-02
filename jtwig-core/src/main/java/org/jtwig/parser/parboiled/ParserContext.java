@@ -35,6 +35,8 @@ public class ParserContext {
         createParser(UnaryOperationExpressionParser.class, context);
         createParser(BinaryOperationExpressionParser.class, context);
         createParser(TernaryOperationExpressionParser.class, context);
+        createParser(EnumerationListExpressionParser.class, context);
+        createParser(ComprehensionListExpressionParser.class, context);
         createParser(PrimaryExpressionParser.class, context);
         createParser(AnyExpressionParser.class, context);
 

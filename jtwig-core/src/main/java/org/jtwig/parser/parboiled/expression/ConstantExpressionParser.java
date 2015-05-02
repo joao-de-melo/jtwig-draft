@@ -20,7 +20,9 @@ public class ConstantExpressionParser extends ExpressionParser<ConstantExpressio
                 TrueRule(),
                 FalseRule(),
                 NumberRule(),
-                StringRule()
+                StringRule(),
+                parserContext().parser(ComprehensionListExpressionParser.class).ExpressionRule(),
+                parserContext().parser(EnumerationListExpressionParser.class).ExpressionRule()
         );
     }
 

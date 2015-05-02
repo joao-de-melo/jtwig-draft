@@ -7,16 +7,12 @@ import org.jtwig.util.JtwigValue;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ListExpression extends Expression {
+public class EnumeratedListExpression extends Expression {
     private final Collection<Expression> expressions;
 
-    public ListExpression(Position position, Collection<Expression> expressions) {
+    public EnumeratedListExpression(Position position, Collection<Expression> expressions) {
         super(position);
         this.expressions = expressions;
-    }
-
-    public Collection<Expression> getExpressions() {
-        return expressions;
     }
 
     @Override

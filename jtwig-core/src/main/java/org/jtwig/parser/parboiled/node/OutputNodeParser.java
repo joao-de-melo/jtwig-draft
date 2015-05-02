@@ -24,7 +24,7 @@ public class OutputNodeParser extends NodeParser<OutputNode> {
 
                 limitsParser.startOutput(),
                 spacingParser.Spacing(),
-                Mandatory(anyExpressionParser.ExpressionRule(), "Missing output expression"),
+                Mandatory(anyExpressionParser.ExpressionRule(), "Missing or invalid output expression"),
                 spacingParser.Spacing(),
 
                 Mandatory(limitsParser.endOutput(), "Expecting end of output code island"),

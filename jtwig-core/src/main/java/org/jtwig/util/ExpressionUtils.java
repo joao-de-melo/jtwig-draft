@@ -1,5 +1,7 @@
 package org.jtwig.util;
 
+import com.google.common.base.Optional;
+
 public final class ExpressionUtils {
 
     private ExpressionUtils() {
@@ -24,20 +26,20 @@ public final class ExpressionUtils {
         return true;
     }
 
-    public static String numberAsString (Object value) {
+    public static Optional<String> numberAsString (Object value) {
         if (value == null) {
-            return Integer.toString(0);
+            return Optional.of(Integer.toString(0));
         } else {
             if (value instanceof Boolean) {
-                return (Boolean.class.cast(value)) ? Integer.toString(1) : Integer.toString(0);
+                return Optional.of((Boolean.class.cast(value)) ? Integer.toString(1) : Integer.toString(0));
             } else if (value instanceof Number) {
-                return value.toString();
+                return Optional.of(value.toString());
             } else {
                 String representation = value.toString();
                 if (representation.matches("-?\\d*\\.?\\d+")) {
-                    return representation;
+                    return Optional.of(representation);
                 } else {
-                    throw new IllegalArgumentException(String.format("Unable to convert '%s' into a number", representation));
+                    return Optional.absent();
                 }
             }
         }

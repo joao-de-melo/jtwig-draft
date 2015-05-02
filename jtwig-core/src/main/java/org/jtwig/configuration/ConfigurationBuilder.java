@@ -2,9 +2,14 @@ package org.jtwig.configuration;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.lyncode.reflection.convert.Converter;
+import com.lyncode.reflection.resolver.argument.ArgumentResolver;
 import org.apache.commons.lang3.builder.Builder;
+import org.jtwig.functions.SimpleFunction;
+import org.jtwig.functions.reference.FunctionReference;
 import org.jtwig.functions.resolver.FunctionResolver;
 import org.jtwig.functions.resolver.FunctionResolverBuilder;
+import org.jtwig.model.expression.lists.*;
 import org.jtwig.parser.JtwigParser;
 import org.jtwig.parser.JtwigParserBuilder;
 import org.jtwig.parser.config.ParserConfigurationBuilder;
@@ -28,6 +33,7 @@ public class ConfigurationBuilder implements Builder<Configuration> {
     private boolean defaults = true;
     private Collection<ResourceResolver> resourceResolvers = new ArrayList<ResourceResolver>();
     private Collection<PropertyResolver> propertyResolvers = new ArrayList<PropertyResolver>();
+    private Collection<EnumerationListStrategy> enumerationListStrategies = new ArrayList<EnumerationListStrategy>();
     private ParserConfigurationBuilder parserConfigurationBuilder = ParserConfigurationBuilder.parserConfiguration();
     private FunctionResolverBuilder functionResolverBuilder = FunctionResolverBuilder.newBuilder();
     private Function<Object, String> jsonMapper;
@@ -65,6 +71,42 @@ public class ConfigurationBuilder implements Builder<Configuration> {
         return this;
     }
 
+
+    public ConfigurationBuilder withArgumentResolver (ArgumentResolver argumentResolver) {
+        functionResolverBuilder.withArgumentResolver(argumentResolver);
+        return this;
+    }
+
+    public ConfigurationBuilder withArgumentResolvers (Collection<ArgumentResolver> argumentResolver) {
+        functionResolverBuilder.withArgumentResolvers(argumentResolver);
+        return this;
+    }
+
+    public ConfigurationBuilder withConverter (Converter converter) {
+        functionResolverBuilder.withConverter(converter);
+        return this;
+    }
+
+    public ConfigurationBuilder withConverters (Collection<Converter> converter) {
+        functionResolverBuilder.withConverters(converter);
+        return this;
+    }
+
+    public ConfigurationBuilder include (Object bean) {
+        functionResolverBuilder.include(bean);
+        return this;
+    }
+
+    public ConfigurationBuilder include(FunctionReference reference) {
+        functionResolverBuilder.include(reference);
+        return this;
+    }
+
+    public ConfigurationBuilder include(SimpleFunction function) {
+        functionResolverBuilder.include(function);
+        return this;
+    }
+
     @Override
     public Configuration build() {
         Collection<PropertyResolver> propertyResolvers = new ArrayList<>();
@@ -80,6 +122,12 @@ public class ConfigurationBuilder implements Builder<Configuration> {
 
             // Resource loaders
             resourceResolvers.add(new ClasspathResourceResolver(new ResourceLoader(getClass().getClassLoader()), new RelativePathResolver()));
+
+            // enumeration
+            enumerationListStrategies.add(new IntegerAscendingOrderEnumerationListStrategy());
+            enumerationListStrategies.add(new IntegerDescendingOrderEnumerationListStrategy());
+            enumerationListStrategies.add(new CharAscendingOrderEnumerationListStrategy());
+            enumerationListStrategies.add(new CharDescendingOrderEnumerationListStrategy());
         }
 
         propertyResolvers.addAll(this.propertyResolvers);
@@ -91,7 +139,9 @@ public class ConfigurationBuilder implements Builder<Configuration> {
                 functionResolverBuilder.build(),
                 new CompositePropertyResolver(propertyResolvers),
                 jsonMapper,
-                parameters
+                new CompositeEnumerationListStrategy(
+                        enumerationListStrategies
+                ), parameters
         );
     }
 
@@ -101,14 +151,16 @@ public class ConfigurationBuilder implements Builder<Configuration> {
         private final FunctionResolver functionResolver;
         private final PropertyResolver propertyResolver;
         private final Function<Object, String> jsonMapper;
+        private final EnumerationListStrategy enumerationListStrategy;
         private final Map<String, Object> parameters;
 
-        public InternalConfiguration(JtwigParser jtwigParser, ResourceResolver resourceResolver, FunctionResolver functionResolver, PropertyResolver propertyResolver, Function<Object, String> jsonMapper, Map<String, Object> parameters) {
+        public InternalConfiguration(JtwigParser jtwigParser, ResourceResolver resourceResolver, FunctionResolver functionResolver, PropertyResolver propertyResolver, Function<Object, String> jsonMapper, EnumerationListStrategy enumerationListStrategy, Map<String, Object> parameters) {
             this.jtwigParser = jtwigParser;
             this.resourceResolver = resourceResolver;
             this.functionResolver = functionResolver;
             this.propertyResolver = propertyResolver;
             this.jsonMapper = jsonMapper;
+            this.enumerationListStrategy = enumerationListStrategy;
             this.parameters = parameters;
         }
 
@@ -135,6 +187,11 @@ public class ConfigurationBuilder implements Builder<Configuration> {
         @Override
         public Function<Object, String> jsonMapper() {
             return jsonMapper;
+        }
+
+        @Override
+        public EnumerationListStrategy enumerationStrategy() {
+            return enumerationListStrategy;
         }
 
         @Override

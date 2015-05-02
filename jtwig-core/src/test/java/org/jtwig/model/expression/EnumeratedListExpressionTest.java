@@ -14,10 +14,10 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ListExpressionTest {
+public class EnumeratedListExpressionTest {
     private final Position position = mock(Position.class);
     private final ArrayList<Expression> expressions = new ArrayList<>();
-    private final ListExpression underTest = new ListExpression(position, expressions);
+    private final EnumeratedListExpression underTest = new EnumeratedListExpression(position, expressions);
     private final RenderContext context = mock(RenderContext.class);
 
     @Before
